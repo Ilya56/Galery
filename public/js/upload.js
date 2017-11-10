@@ -1,4 +1,29 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require==="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0; o<r.length; o++)s(r[o]);return s})({1:[function(require, module, exports){
+(function e(t,n,r){
+    function s(o,u){
+        if(!n[o]){
+            if(!t[o]){
+                var a=typeof require==="function"&&require;
+                if(!u&&a)return a(o,!0);
+                if(i)return i(o,!0);
+                var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND", f
+            }
+            var l=n[o]={
+                exports:{}
+            };
+            t[o][0].call(l.exports, function(e){
+                var n=t[o][1][e];
+                return s(n?n:e)
+                },
+                l,l.exports,e,t,n,r
+            )
+        }
+        return n[o].exports
+    }
+    var i = typeof require==="function"&&require;
+    for(var o=0; o<r.length; o++)
+        s(r[o]);
+    return s
+})({1:[function(require, module, exports){
     var modalConfirm = function (msg, callbackYes, callbackNo) {
         htmlModal = '' +
             '<div id="modal-confirm" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-confirm-label" aria-hidden="true">' +
@@ -43,24 +68,23 @@
     module.exports = {
         modalConfirm: modalConfirm
     };
-},{}],2:[function(require,module,exports){
+},{}], 2:[function(require,module,exports){
     var form = document.querySelector( '.box' );
-    var input = form.querySelector( 'input[type="file"]' );
+    var input = $('#fileupload');
     var label = form.querySelector( 'label' );
 
     var $navContainer = $('#ocim-nav'),
         $navDefault = $('#ocim-nav-default'),
         $navSelected = $('#ocim-nav-img-selected'),
         $navForm = $('#ocim-nav-menu-form'),
-        $navButtons = $('.ocim-menu-btn'),
+        $navButtons = $('#upload-btn'),
         $imgListWrapper = $('#ocim-image-list-wrapper'),
         $imgList = $('#ocim-image-list'),
         $imgFormWrapper = $('#ocim-image-form-wrapper'),
         $imgFormStep1 = $('#ocim-form-step-1'),
         $imgFormStep2 = $('#ocim-form-step-2'),
         $imgCropFields = $('#ocim-image-crop-fields'),
-        $imgFormStep2 = $('#ocim-form-step-2'),
-        $imgFormBtnUpload = $('#ocim-image-file'),
+        $imgFormBtnUpload = input,
         $imgPreview = $('#ocim-image-preview'),
         $imgDataWidth = $('#ocim-image-crop-width'),
         $imgDataHeight = $('#ocim-image-crop-height'),
@@ -222,7 +246,7 @@
                 event.initEvent( 'submit', true, false );
                 form.dispatchEvent( event );
             };
-        $navButtons.addEventListener( 'change', function( e ) {
+        $navButtons.click(function( e ) {
             showFiles( e.target.files );
             triggerFormSubmit();
         });

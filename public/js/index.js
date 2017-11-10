@@ -196,11 +196,11 @@ var droppedFiles = [];
 
 
     // applying the effect for every form
-    var forms = document.querySelectorAll( '.box' ); ///*
+    var forms = document.querySelectorAll( '.box' ); /*
     Array.prototype.forEach.call( forms, function( form )
     {
         // letting the server side to know we are going to make an Ajax request
-        var ajaxFlag = document.createElement( 'input' );
+        /var ajaxFlag = document.createElement( 'input' );
 
         var input		 = form.querySelector( 'input[type="file"]' ),
             label		 = form.querySelector( 'label' ),
@@ -358,5 +358,5 @@ var droppedFiles = [];
         input.addEventListener( 'focus', function(){ input.classList.add( 'has-focus' ); });
         input.addEventListener( 'blur', function(){ input.classList.remove( 'has-focus' ); });
 
-    });//*/
+    });*/
 }( document, window, 0 ));
