@@ -1,5 +1,4 @@
 .ocim-image-form-wrapper{width:100%;position:relative;min-height:60vh;height:auto}
-.ocim-image-form-wrapper .ocim-form-step{display:none}
 .ocim-image-form-wrapper .ocim-form-step.ocim-active{display:block}
 .ocim-image-form-wrapper .ocim-image-preview-wrapper{width:100%}
 .ocim-image-form-wrapper .ocim-image-preview-wrapper .ocim-image-preview{max-width:100%}

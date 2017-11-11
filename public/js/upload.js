@@ -72,16 +72,16 @@
     var form = document.querySelector( '.box' );
     var input = $('#fileupload');
     var label = form.querySelector( 'label' );
+    var files;
 
     var $navContainer = $('#ocim-nav'),
         $navDefault = $('#ocim-nav-default'),
         $navSelected = $('#ocim-nav-img-selected'),
         $navForm = $('#ocim-nav-menu-form'),
-        $navButtons = $('#upload-btn'),
+        $navButtons = $('#ocim-form-btn-finish'),
         $imgListWrapper = $('#ocim-image-list-wrapper'),
         $imgList = $('#ocim-image-list'),
         $imgFormWrapper = $('#ocim-image-form-wrapper'),
-        $imgFormStep1 = $('#ocim-form-step-1'),
         $imgFormStep2 = $('#ocim-form-step-2'),
         $imgCropFields = $('#ocim-image-crop-fields'),
         $imgFormBtnUpload = input,
@@ -99,8 +99,6 @@
         $croppedItemsList = $('#ocim-cropped-images-list'),
         $croppedItems = $('.ocim-cropped-image'),
         $croppedItemButtonDelete = $('.ocim-cropped-image-delete'),
-        $buttonMetadata = $('#ocim-form-btn-image-meta'),
-        $buttonEditor = $('#ocim-form-btn-image-editor'),
         $buttonFinish = $('.ocim-form-btn-save'),
         $formMetaImgTitle = $('#ocim-field-image-title'),
         $formMetaImgAlt = $('#ocim-field-image-alt'),
@@ -148,6 +146,7 @@
 
     function loadImageUploadForm (fileData, evt) {
         var src = evt.target.result;
+        files = src;
 
         fillImageInfo(fileData, src);
 
@@ -230,16 +229,12 @@
     };
 
     var showUploadForm = function () {
-        $imgListWrapper.removeClass('ocim-active');
+        $('.ocim-image-list-wrapper').remove();
         $imgFormWrapper.addClass('ocim-active');
         $navForm.addClass('ocim-active').siblings().removeClass('ocim-active');
     };
 
     var initHandleButtons = function () {
-            var showFiles = function( files )
-            {
-                label.textContent = files.length > 1 ? ( input.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', files.length ) : files[ 0 ].name;
-            },
             triggerFormSubmit = function()
             {
                 var event = document.createEvent( 'HTMLEvents' );
@@ -247,7 +242,7 @@
                 form.dispatchEvent( event );
             };
         $navButtons.click(function( e ) {
-            showFiles( e.target.files );
+            console.log("upload");
             triggerFormSubmit();
         });
     };
@@ -337,77 +332,9 @@
                         $croppedImagesWrapper.removeClass('ocim-active');
                         $croppedImagesWrapper.removeClass('ocim-show');
                     }
-
-
                 });
             });
         });
-
-        $('body').on('click', $buttonMetadata.selector, function (e) {
-            e.preventDefault();
-
-            $imgFormStep1.hide();
-            $imgFormStep2.show();
-        });
-
-        $('body').on('click', $buttonEditor.selector, function (e) {
-            e.preventDefault();
-
-            $imgFormStep2.hide();
-            $imgFormStep1.show();
-        });
-    };
-
-    var cropImage = function () {
-        var croppedData = $imgPreview.cropper('getData');
-
-        croppedData.imgWidth = imgWidth > 0 ? imgWidth : Math.ceil(croppedData.width);
-        croppedData.imgHeight = imgHeight > 0 ? imgHeight : Math.ceil(croppedData.height);
-        croppedData.cropSizeExists = !freeCrop;
-        croppedData.saveCrop = $cropCheckboxSaveCrop.is(':checked') ? 1 : 0;
-
-        var canvas = $imgPreview.cropper('getCroppedCanvas');
-        var croppedDataJson = JSON.stringify(croppedData);
-        var field = $('<input type="hidden" name="imgcropdata[]">').val(croppedDataJson);
-        var htmlItem = '' +
-            '<div class="' + $croppedItems.selector.replace('.', '') + '" >' +
-            ' <a href="#" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete image" class="btn btn-xs btn-danger ' + $croppedItemButtonDelete.selector.replace('.', '') + '"><i class="fa fa-trash-o"></i></a>' +
-            '</div>';
-
-        $formMetaInfoFileCrops.append('<li>' + croppedData.imgWidth + 'x' + croppedData.imgHeight + '</li>');
-        $croppedItemsList.prepend($(htmlItem).append(canvas).append(field));
-        $croppedImagesWrapper.addClass('ocim-active');
-        toastCroppedImage();
-        croppedWrapperPositioning();
-        resetCropForm();
-    };
-
-    var croppedWrapperPositioning = function () {
-        var croppedWrapperHeight = $(window).height() - $croppedImagesWrapper.offset().top - 20;
-        $croppedImagesWrapper.height(croppedWrapperHeight);
-    };
-
-    var toastCroppedImage = function () {
-        $croppedImagesWrapper.addClass('ocim-show');
-        setTimeout(function () {
-            $croppedImagesWrapper.removeClass('ocim-show');
-        },1000);
-    };
-
-    var resetCropForm = function () {
-        $cropCheckboxSaveCrop.prop('checked', false);
-        $cropSizeButtons.removeClass('ocim-active');
-        $($cropSizeButtons.selector + '[rel="free"]').addClass('ocim-active');
-        $imgCropFields.show();
-        $imgDataWidth.val('');
-        $imgDataHeight.val('');
-        $imgPreview.cropper('reset');
-        scaleX = 1;
-        scaleY = 1;
-        imgWidth = 0;
-        imgHeight = 0;
-        cropSizeSet = false;
-        freeCrop = true;
     };
 
     var resetForm = function () {
@@ -435,5 +362,57 @@
 
     $(document).ready(function () {
         init();
+    });
+
+    form.addEventListener( 'submit', function( e )
+    {
+        // preventing the duplicate submissions if the current one is in progress
+        if( form.classList.contains( 'is-uploading' ) ) return false;
+
+        form.classList.add( 'is-uploading' );
+        form.classList.remove( 'is-error' );
+        e.preventDefault();
+
+        // gathering the form data
+        var ajaxData = new FormData( form );
+        if( droppedFiles )
+        {
+            Array.prototype.forEach.call( droppedFiles, function( file )
+            {
+                ajaxData.append('files', file );
+            });
+        }
+
+        // ajax request
+        var ajax = new XMLHttpRequest();
+        ajax.open( form.getAttribute( 'method' ), form.getAttribute( 'action' ), true );
+
+        ajax.onload = function()
+        {
+            form.classList.remove( 'is-uploading' );
+            if( ajax.status >= 200 && ajax.status < 400 )
+            {
+                console.log(ajax.response);
+                var data = JSON.parse( ajax.response);
+                console.log(data);
+                form.classList.add( data.success_ === true ? 'is-success' : 'is-error' );
+                if( !data.success_ )
+                    errorMsg.textContent = data.error_;
+                else {
+                    label.textContent = data.text_ === null ? "" : data.text;
+                }
+
+                addElement(data.toAdd);
+            }
+            else alert( 'Error. Please, contact the webmaster!' );
+        };
+
+        ajax.onerror = function()
+        {
+            form.classList.remove( 'is-uploading' );
+            alert( 'Error. Please, try again!' );
+        };
+
+        ajax.send(ajaxData);
     });
 },{"./functions":1}]},{},[2]);
