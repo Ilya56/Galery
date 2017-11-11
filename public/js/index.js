@@ -126,21 +126,6 @@ $(window).load(function() {
 
     console.log($('.product-image-manager'));
 
-    $('.product-image-manager').sortable({
-        handle: '.fa-arrows',
-        helper: 'clone',
-        items: '> .image-container',
-        placeholder: 'image-container image-placeholder',
-        tolerance: 'pointer',
-        start: function(event, ui) {
-            ui.placeholder.height(ui.item.height());
-            ui.placeholder.html('<div class="inner-placeholder"></div>');
-        },
-        stop: function (event, ui) {
-
-        }
-    });
-
     if (!imageGetted) {
         var getImgsRequest = new XMLHttpRequest();
         getImgsRequest.open('GET', "/images", true);
