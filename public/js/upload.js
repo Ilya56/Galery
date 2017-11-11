@@ -118,7 +118,6 @@
     ;
 
     var init = function () {
-        $.material.init();
         $('[data-toggle="tooltip"]').tooltip();
         initUploadEvent();
         initHandleButtons();
@@ -153,7 +152,7 @@
         $imgPreview.attr('src', src);
         showUploadForm();
 
-        $imgPreview.cropper('destroy');
+        /*$imgPreview.cropper('destroy');
         $imgPreview.cropper({
             viewMode:1,
             aspectRatio: NaN,
@@ -181,7 +180,7 @@
                     $imgDataWidth.val(Math.round(e.width));
                 }
             }
-        });
+        });*/
     }
 
     var fillImageInfo = function (fileData, src) {

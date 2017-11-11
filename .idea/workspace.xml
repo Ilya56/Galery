@@ -6,9 +6,11 @@
     <bookmark url="file://$PROJECT_DIR$/public/js/index.js" line="301" mnemonic="2" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c5b733e2-e152-4f1a-8b68-d923940ff095" name="Default" comment="">
+    <list default="true" id="c5b733e2-e152-4f1a-8b68-d923940ff095" name="Default" comment="remove vendor">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/css/vendor.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/public/js/vendor.min.js" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/index.js" afterPath="$PROJECT_DIR$/public/js/index.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/public/js/upload.js" afterPath="$PROJECT_DIR$/public/js/upload.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/views/index.html" afterPath="$PROJECT_DIR$/views/index.html" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -26,13 +28,23 @@
       <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="223">
-              <caret line="99" column="40" lean-forward="true" selection-start-line="99" selection-start-column="40" selection-end-line="99" selection-end-column="40" />
+            <state relative-caret-position="274">
+              <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
               <folding>
                 <element signature="e#1826#1834#0" expanded="true" />
                 <element signature="n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
                 <element signature="n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="upload.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/routes/upload.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="104">
+              <caret line="10" column="51" lean-forward="false" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="51" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -60,25 +72,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="upload.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="upload.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/public/js/upload.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="234">
-              <caret line="122" column="26" lean-forward="true" selection-start-line="122" selection-start-column="26" selection-end-line="122" selection-end-column="26" />
+            <state relative-caret-position="182">
+              <caret line="182" column="13" lean-forward="false" selection-start-line="182" selection-start-column="13" selection-end-line="182" selection-end-column="13" />
               <folding>
                 <element signature="e#39#626#0" expanded="false" />
                 <element signature="e#782#2431#0" expanded="false" />
                 <element signature="e#847#2362#0" expanded="false" />
                 <element signature="e#2386#2428#0" expanded="false" />
-                <element signature="e#5812#6660#0" expanded="false" />
-                <element signature="e#6719#7087#0" expanded="false" />
-                <element signature="e#7152#7434#0" expanded="false" />
-                <element signature="e#7480#7900#0" expanded="false" />
-                <element signature="e#7940#8124#0" expanded="false" />
-                <element signature="e#8578#11753#0" expanded="false" />
-                <element signature="e#8746#9407#0" expanded="false" />
-                <element signature="e#11788#12136#0" expanded="false" />
-                <element signature="e#12179#12453#0" expanded="false" />
+                <element signature="e#6696#7064#0" expanded="false" />
+                <element signature="e#7129#7411#0" expanded="false" />
+                <element signature="e#7457#7877#0" expanded="false" />
+                <element signature="e#7917#8101#0" expanded="false" />
+                <element signature="e#8555#11730#0" expanded="false" />
+                <element signature="e#8723#9384#0" expanded="false" />
+                <element signature="e#11765#12113#0" expanded="false" />
+                <element signature="e#12156#12430#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -153,11 +164,11 @@
         <option value="$PROJECT_DIR$/public/css/style.css" />
         <option value="$PROJECT_DIR$/public/css/load-form.css" />
         <option value="$PROJECT_DIR$/views/load-form.html" />
-        <option value="$PROJECT_DIR$/public/js/upload.js" />
         <option value="$PROJECT_DIR$/public/js/lib/jquery-2.2.4.min.js" />
         <option value="$PROJECT_DIR$/public/js/lib/jquery-ui.min.js" />
         <option value="$PROJECT_DIR$/public/js/lib/bootstrap.min.js" />
         <option value="$PROJECT_DIR$/public/js/index.js" />
+        <option value="$PROJECT_DIR$/public/js/upload.js" />
         <option value="$PROJECT_DIR$/views/index.html" />
       </list>
     </option>
@@ -334,7 +345,7 @@
       <workItem from="1510318058950" duration="2620000" />
       <workItem from="1510342835547" duration="6469000" />
       <workItem from="1510411857142" duration="693000" />
-      <workItem from="1510434374252" duration="4938000" />
+      <workItem from="1510434374252" duration="5245000" />
     </task>
     <task id="LOCAL-00001" summary="make form for download images">
       <created>1510349403618</created>
@@ -350,19 +361,26 @@
       <option name="project" value="LOCAL" />
       <updated>1510438694668</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="change script upload in html">
+      <created>1510439391587</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1510439391587</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50775000" />
+    <option name="totallyTimeSpent" value="51082000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.49095607" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.49095607" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.28453946" sideWeight="0.5029762" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.50904393" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28453946" sideWeight="0.49702382" order="2" side_tool="false" content_ui="tabs" />
@@ -376,7 +394,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32894737" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -408,11 +425,13 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="make form for download images" />
     <MESSAGE value="now form show above all&#10;remake button upload" />
-    <option name="LAST_COMMIT_MESSAGE" value="now form show above all&#10;remake button upload" />
+    <MESSAGE value="change script upload in html" />
+    <MESSAGE value="remove vendor" />
+    <option name="LAST_COMMIT_MESSAGE" value="remove vendor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="10" />
+      <option name="time" value="11" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -618,14 +637,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/upload.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="0" lean-forward="false" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/css/vendor.min.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -742,18 +753,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/views/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="99" column="40" lean-forward="true" selection-start-line="99" selection-start-column="40" selection-end-line="99" selection-end-column="40" />
-          <folding>
-            <element signature="e#1826#1834#0" expanded="true" />
-            <element signature="n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-            <element signature="n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/js/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -779,31 +778,48 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126922">
           <caret line="7478" column="14" lean-forward="false" selection-start-line="7478" selection-start-column="14" selection-end-line="7478" selection-end-column="14" />
-          <folding>
-            <marker date="1448940862000" expanded="true" signature="447161:447327" ph="..." />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/js/upload.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="234">
-          <caret line="122" column="26" lean-forward="true" selection-start-line="122" selection-start-column="26" selection-end-line="122" selection-end-column="26" />
+        <state relative-caret-position="182">
+          <caret line="182" column="13" lean-forward="false" selection-start-line="182" selection-start-column="13" selection-end-line="182" selection-end-column="13" />
           <folding>
             <element signature="e#39#626#0" expanded="false" />
             <element signature="e#782#2431#0" expanded="false" />
             <element signature="e#847#2362#0" expanded="false" />
             <element signature="e#2386#2428#0" expanded="false" />
-            <element signature="e#5812#6660#0" expanded="false" />
-            <element signature="e#6719#7087#0" expanded="false" />
-            <element signature="e#7152#7434#0" expanded="false" />
-            <element signature="e#7480#7900#0" expanded="false" />
-            <element signature="e#7940#8124#0" expanded="false" />
-            <element signature="e#8578#11753#0" expanded="false" />
-            <element signature="e#8746#9407#0" expanded="false" />
-            <element signature="e#11788#12136#0" expanded="false" />
-            <element signature="e#12179#12453#0" expanded="false" />
+            <element signature="e#6696#7064#0" expanded="false" />
+            <element signature="e#7129#7411#0" expanded="false" />
+            <element signature="e#7457#7877#0" expanded="false" />
+            <element signature="e#7917#8101#0" expanded="false" />
+            <element signature="e#8555#11730#0" expanded="false" />
+            <element signature="e#8723#9384#0" expanded="false" />
+            <element signature="e#11765#12113#0" expanded="false" />
+            <element signature="e#12156#12430#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="98" column="0" lean-forward="false" selection-start-line="98" selection-start-column="0" selection-end-line="98" selection-end-column="0" />
+          <folding>
+            <element signature="e#1826#1834#0" expanded="true" />
+            <element signature="n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#div#0;n#div#0;n#div#1;n#div#0;n#body#0;n#html#0;n#!!top" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/upload.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="104">
+          <caret line="10" column="51" lean-forward="false" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="51" />
+          <folding />
         </state>
       </provider>
     </entry>
