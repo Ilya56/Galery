@@ -100,9 +100,10 @@
         $croppedItems = $('.ocim-cropped-image'),
         $croppedItemButtonDelete = $('.ocim-cropped-image-delete'),
         $buttonFinish = $('.ocim-form-btn-save'),
-        $formMetaImgTitle = $('#ocim-field-image-title'),
-        $formMetaImgAlt = $('#ocim-field-image-alt'),
-        $formMetaImgCredits = $('#ocim-field-image-credits'),
+        imageTitle = $('#image-title'),
+        imageDesc = $('#image-desc'),
+        imageYear = $('#image-year'),
+        imageCredit = $('#image-credits'),
         $formMetaInfoFileName = $('#ocim-file-info-file-name'),
         $formMetaInfoFileSize = $('#ocim-file-info-file-size'),
         $formMetaInfoFileType = $('#ocim-file-info-file-type'),
@@ -151,41 +152,10 @@
 
         $imgPreview.attr('src', src);
         showUploadForm();
-
-        /*$imgPreview.cropper('destroy');
-        $imgPreview.cropper({
-            viewMode:1,
-            aspectRatio: NaN,
-            strict: true,
-            responsive: true,
-            checkImageOrigin: true,
-            modal: true,
-            guides: true,
-            center: true,
-            highlight: true,
-            background: true,
-            autoCrop: true,
-            autoCropArea: 0.8,
-            zoomable: false,
-            zoomOnWheel: false,
-            zoomOnTouch: false,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            doubleClickToggle: false,
-            minContainerWidth: 200,
-            minContainerHeight: 100,
-            crop: function (e) {
-                if(!cropSizeSet) {
-                    $imgDataHeight.val(Math.round(e.height));
-                    $imgDataWidth.val(Math.round(e.width));
-                }
-            }
-        });*/
     }
 
     var fillImageInfo = function (fileData, src) {
-        imgTitle = ''; //fileData.name
-        $formMetaImgTitle.val(imgTitle);
+        imageTitle.html(fileData.name);
 
         $formMetaInfoFileName.html(fileData.name);
         $formMetaInfoFileSize.html(getFileSize(fileData.size));
@@ -228,9 +198,9 @@
     };
 
     var showUploadForm = function () {
-        $('.ocim-image-list-wrapper').remove();
+        $('.ocim-image-list-wrapper').css('display', 'none');
         $imgFormWrapper.addClass('ocim-active');
-        $navForm.addClass('ocim-active').siblings().removeClass('ocim-active');
+        //$navForm.addClass('ocim-active').siblings().removeClass('ocim-active');
     };
 
     var initHandleButtons = function () {
@@ -336,18 +306,6 @@
         });
     };
 
-    var resetForm = function () {
-        $formMetaImgTitle.val('');
-        $formMetaImgAlt.val('');
-        $formMetaImgCredits.val('');
-        $formMetaInfoFileName.html('');
-        $formMetaInfoFileSize.html('');
-        $formMetaInfoFileType.html('');
-        $formMetaInfoFileRes.html('');
-        $formMetaInfoFileCrops.html('');
-        $croppedItemsList.html('');
-    };
-
     var validateImage = function (file) {
         var arrMimes = ['image/jpg', 'image/jpeg', 'image/gif', 'image/png'];
         var maxSize = 10 * 1024 * 1024; //size in MB
@@ -373,24 +331,27 @@
         e.preventDefault();
 
         // gathering the form data
-        var ajaxData = new FormData( form );
-        if( droppedFiles )
-        {
-            Array.prototype.forEach.call( droppedFiles, function( file )
-            {
-                ajaxData.append('files', file );
-            });
-        }
+        var ajaxData = new FormData(form);
+        ajaxData.append('title', imageTitle.val());
+        ajaxData.append('desc', imageDesc.val());
+        ajaxData.append('year', imageYear.val());
+        ajaxData.append('credits', imageCredit.val());
 
         // ajax request
         var ajax = new XMLHttpRequest();
+
         ajax.open( form.getAttribute( 'method' ), form.getAttribute( 'action' ), true );
 
         ajax.onload = function()
         {
             form.classList.remove( 'is-uploading' );
+
+            $('.ocim-image-list-wrapper').css('display', 'block');
+            $('#ocim-image-form-wrapper').css('display', 'none');
+
             if( ajax.status >= 200 && ajax.status < 400 )
             {
+                console.log(ajaxData);
                 console.log(ajax.response);
                 var data = JSON.parse( ajax.response);
                 console.log(data);
@@ -399,6 +360,7 @@
                     errorMsg.textContent = data.error_;
                 else {
                     label.textContent = data.text_ === null ? "" : data.text;
+                    ids.push(data.toAdd.id);
                 }
 
                 addElement(data.toAdd);

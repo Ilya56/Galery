@@ -30,6 +30,7 @@ app.use(fileUpload());
 app.get('/', require('./routes/main').get);
 app.post('/upload', require('./routes/upload').post);
 app.get('/images', require('./routes/images').get);
+app.post('/images', require('./routes/images').post);
 
 //ERRORS
 app.use(function(req, res, next) {

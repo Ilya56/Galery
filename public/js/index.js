@@ -1,21 +1,19 @@
-function Image(id, url, uploadedBy, uploadDate, uploadTo, title, alt) {
+function Image(id, url, title, description, credits, year) {
     this.id = id;
     this.url = url;
-    this.uploadedBy = uploadedBy;
-    this.uploadedDate = uploadDate;
-    this.uploadedTo = uploadTo;
     this.title = title;
-    this.alt = alt;
+    this.description = description;
+    this.credits = credits;
+    this.year = year;
 }
 Image.prototype.toJSON = function () {
     return {
         id: this.id,
         url: this.url,
-        upBy: this.uploadedBy,
-        upDate: this.uploadedDate,
-        upTo: this.uploadedTo,
         title: this.title,
-        alt: this.alt
+        description: this.description,
+        credits: this.credits,
+        year: this.year
     }
 };
 
@@ -41,7 +39,12 @@ function addElement(img) {
     $('.product-image-manager')[0].appendChild(temp.firstChild);
 }
 
+var prevIndex;
+var ids = [];
+
 $(document).ready(function() {
+    var manager = $('.product-image-manager');
+
     $('[data-toggle="tooltip"]').tooltip();
 
     var imageColumns = Math.round($('.product-image-manager').width() / 145);
@@ -93,7 +96,7 @@ $(document).ready(function() {
         $('#file-modal').modal('show');
     });
 
-    $('.product-image-manager').sortable({
+    manager.sortable({
         handle: '.fa-arrows',
         helper: 'clone',
         items: '> .image-container',
@@ -102,9 +105,48 @@ $(document).ready(function() {
         start: function(event, ui) {
             ui.placeholder.height(ui.item.height());
             ui.placeholder.html('<div class="inner-placeholder"></div>');
+            prevIndex = ui.item.index();
         },
         stop: function (event, ui) {
+            var index = ui.item.index();
 
+            if (index !== prevIndex) {
+                var temp = ids[prevIndex];
+                console.log(ids);
+                if (prevIndex > index) {
+                    for (var i = prevIndex - 1; i >= index; i--)
+                        ids[i + 1] = ids[i];
+                    ids[index] = temp;
+                } else {
+                    for (var i = prevIndex; i < index; i++)
+                        ids[i] = ids[i + 1];
+                    ids[index] = temp;
+                }
+                console.log(ids);
+
+                var ajaxData = new FormData();
+                ajaxData.append('ids', ids);
+
+                // ajax request
+                var ajax = new XMLHttpRequest();
+                ajax.open('post', '/images', true);
+
+                ajax.onload = function () {
+                    if (ajax.status >= 200 && ajax.status < 400) {
+                        var data = JSON.parse(ajax.response);
+                        if (!data.success_) {
+                            alert('Error. Please, contact the webmaster!');
+                        }
+                    }
+                    else alert('Error. Please, contact the webmaster!');
+                };
+
+                ajax.onerror = function () {
+                    alert('Error. Please, try again!');
+                };
+
+                ajax.send(ajaxData);
+            }
         }
     });
 
@@ -123,14 +165,12 @@ $(document).ready(function() {
 
 var imageGetted = false;
 $(window).load(function() {
-
-    console.log($('.product-image-manager'));
-
     if (!imageGetted) {
         var getImgsRequest = new XMLHttpRequest();
         getImgsRequest.open('GET', "/images", true);
         getImgsRequest.onload = function () {
             var images = JSON.parse(getImgsRequest.response);
+            console.log(images.imgs);
 
             for (var i in images.imgs) {
                 var j = images.imgs[i];
@@ -148,6 +188,11 @@ $(window).load(function() {
                     $(this).addClass('square');
                 }
             });
+
+            var manager = $('.product-image-manager');
+            for (var i = 0; i < images.imgs.length; i++)
+                ids.push(images.imgs[i].id);
+            console.log(ids);
         };
 
         getImgsRequest.send();
