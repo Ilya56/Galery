@@ -321,6 +321,58 @@
         init();
     });
 
+    function setListener() {
+        $('.on-image-controls > .fa-check').click(function() {
+            $('.image-container').removeClass('picked-as-primary');
+            $(this).parents('.image-container').addClass('picked-as-primary');
+        });
+
+        $('.on-image-controls > .fa-info-circle').click(function() {
+            var image = $(this).parents('.image-container').find('img');
+            var path = image.attr('src');
+            var filename = path.replace(/\\/g, '/');
+            filename = filename.substring(filename.lastIndexOf('/')+ 1).replace(/[?#].+$/, '');
+            var extension = path.split('.').pop();
+            var filesize;
+            var dimensions = image.get(0).naturalWidth + ' x ' + image.get(0).naturalHeight;
+            var altText = image.attr('alt');
+            var title = image.attr('title');
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", path, true);
+            xhr.responseType = "arraybuffer";
+            xhr.onreadystatechange = function() {
+                if(this.readyState == this.DONE) {
+                    if(this.response.byteLength >= 1000000) {
+                        var filesize = this.response.byteLength/1000000;
+                        filesize = Math.round(filesize * 10)/10 + ' MB';
+                    } else {
+                        var filesize = Math.round(this.response.byteLength/1000) + ' KB';
+                    }
+
+                    $('.static-data #filesize').text(filesize);
+                }
+            };
+            xhr.send(null);
+
+            $('#image-preview-modal').html('<img src="'+ path +'">');
+            $('.static-data #filename').text(filename);
+            //$('.static-data #file-extension').text('image/' + extension);
+            $('.static-data #file-dimensions').text(dimensions);
+
+            $('.dynamic-data #url').val(path);
+            $('.dynamic-data #title').val(title);
+            $('.dynamic-data #alt').val(altText);
+            $('.dynamic-data #full-image-link').attr('href', path);
+
+            $('#file-modal').modal('show');
+        });
+
+        $('.on-image-controls > .fa-times').click(function() {
+            $(this).parents('.image-container').remove();
+        });
+    }
+
     form.addEventListener( 'submit', function( e )
     {
         // preventing the duplicate submissions if the current one is in progress
@@ -341,6 +393,8 @@
         var ajax = new XMLHttpRequest();
 
         ajax.open( form.getAttribute( 'method' ), form.getAttribute( 'action' ), true );
+
+        console.log(ajax);
 
         ajax.onload = function()
         {

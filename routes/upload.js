@@ -2,7 +2,6 @@ var Image = require('../models/Image');
 var images = require('./images');
 
 exports.post = function (req, res) {
-    console.log(req);
     console.log(req.files);
     if (!req.files) {
         console.log("333");

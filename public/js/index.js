@@ -28,7 +28,8 @@ function addElement(img) {
         "      <span class=\"fa fa-times\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete image\"></span>\n" +
         "    </div>\n" +
         "    <div class=\"center-container\">\n" +
-        "      <img src=" + img.url + ">\n" +
+        "      <img src=" + img.url + " title='" + img.title + "' desc='" + img.description +
+        "' year='" + img.year + "' credits='" + img.credits + "'>\n" +
         "    </div>\n" +
         "  </div>\n" +
         "</div>";
@@ -37,6 +38,8 @@ function addElement(img) {
     temp.innerHTML = elem;
 
     $('.product-image-manager')[0].appendChild(temp.firstChild);
+
+    setListener();
 }
 
 var prevIndex;
@@ -49,52 +52,6 @@ $(document).ready(function() {
 
     var imageColumns = Math.round($('.product-image-manager').width() / 145);
     $('.product-image-manager').attr('data-image-columns', imageColumns);
-
-    $('.on-image-controls > .fa-check').click(function() {
-        $('.image-container').removeClass('picked-as-primary');
-        $(this).parents('.image-container').addClass('picked-as-primary');
-    });
-
-    $('.on-image-controls > .fa-info-circle').click(function() {
-        var image = $(this).parents('.image-container').find('img');
-        var path = image.attr('src');
-        var filename = path.replace(/\\/g, '/');
-        filename = filename.substring(filename.lastIndexOf('/')+ 1).replace(/[?#].+$/, '');
-        var extension = path.split('.').pop();
-        var filesize;
-        var dimensions = image.get(0).naturalWidth + ' x ' + image.get(0).naturalHeight;
-        var altText = image.attr('alt');
-        var title = image.attr('title');
-
-        var xhr = new XMLHttpRequest();
-        xhr.open("GET", path, true);
-        xhr.responseType = "arraybuffer";
-        xhr.onreadystatechange = function() {
-            if(this.readyState == this.DONE) {
-                if(this.response.byteLength >= 1000000) {
-                    var filesize = this.response.byteLength/1000000;
-                    filesize = Math.round(filesize * 10)/10 + ' MB';
-                } else {
-                    var filesize = Math.round(this.response.byteLength/1000) + ' KB';
-                }
-
-                $('.static-data #filesize').text(filesize);
-            }
-        };
-        xhr.send(null);
-
-        $('#image-preview-modal').html('<img src="'+ path +'">');
-        $('.static-data #filename').text(filename);
-        //$('.static-data #file-extension').text('image/' + extension);
-        $('.static-data #file-dimensions').text(dimensions);
-
-        $('.dynamic-data #url').val(path);
-        $('.dynamic-data #title').val(title);
-        $('.dynamic-data #alt').val(altText);
-        $('.dynamic-data #full-image-link').attr('href', path);
-
-        $('#file-modal').modal('show');
-    });
 
     manager.sortable({
         handle: '.fa-arrows',
@@ -149,19 +106,67 @@ $(document).ready(function() {
             }
         }
     });
+});
+
+function setListener() {
+    $('.on-image-controls > .fa-check').click(function() {
+        $('.image-container').removeClass('picked-as-primary');
+        $(this).parents('.image-container').addClass('picked-as-primary');
+    });
+
+    $('.on-image-controls > .fa-info-circle').click(function() {
+        var image = $(this).parents('.image-container').find('img');
+        var path = image.attr('src');
+        var filename = path.replace(/\\/g, '/');
+        filename = filename.substring(filename.lastIndexOf('/')+ 1).replace(/[?#].+$/, '');
+        var extension = path.split('.').pop();
+        var filesize;
+        var dimensions = image.get(0).naturalWidth + ' x ' + image.get(0).naturalHeight;
+        var desc = image.attr('desc');
+        var title = image.attr('title');
+        var year = image.attr('year');
+        var credits = image.attr('credits');
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("GET", path, true);
+        xhr.responseType = "arraybuffer";
+        xhr.onreadystatechange = function() {
+            if(this.readyState == this.DONE) {
+                if(this.response.byteLength >= 1000000) {
+                    var filesize = this.response.byteLength/1000000;
+                    filesize = Math.round(filesize * 10)/10 + ' MB';
+                } else {
+                    var filesize = Math.round(this.response.byteLength/1000) + ' KB';
+                }
+
+                $('.static-data #filesize').text(filesize);
+            }
+        };
+        xhr.send(null);
+
+        $('#image-preview-modal').html('<img src="'+ path +'">');
+        $('.static-data #filename').text(filename);
+        //$('.static-data #file-extension').text('image/' + extension);
+        $('.static-data #file-dimensions').text(dimensions);
+
+        $('.dynamic-data #url').val(path);
+        $('.dynamic-data #title').val(title);
+        $('.dynamic-data #desc').val(desc);
+        $('.dynamic-data #full-image-link').attr('href', path);
+        $('.dynamic-data #year').val(year);
+        $('.dynamic-data #credits').val(credits);
+
+        $('#file-modal').modal('show');
+
+        $('save-changes').onclick(function () {
+
+        });
+    });
 
     $('.on-image-controls > .fa-times').click(function() {
-        $(this).parent().find('.delete-confirm').addClass('active');
-    });
-
-    $('.on-image-controls > .delete-confirm').click(function() {
         $(this).parents('.image-container').remove();
     });
-
-    $('.product-image-manager > .image-container > .inner-image-container > .on-image-controls').mouseleave(function() {
-        $(this).find('.delete-confirm').removeClass('active');
-    });
-});
+}
 
 var imageGetted = false;
 $(window).load(function() {
@@ -193,28 +198,13 @@ $(window).load(function() {
             for (var i = 0; i < images.imgs.length; i++)
                 ids.push(images.imgs[i].id);
             console.log(ids);
+
+            setListener();
         };
 
         getImgsRequest.send();
 
         imageGetted = true;
-        /*var imageManager = $('.product-image-manager-outer-space');
-        console.log(imageManager);
-        var html = imageManager[0];
-        console.log(html);
-        var data = {html: html};
-        console.log(data);
-        var cache = [];
-        var jsonImages = JSON.stringify(data, function (k, v) {
-            if (typeof v === 'object' && v !== null) {
-                if (cache.indexOf(v) !== -1) {
-                    return;
-                }
-                cache.push(v);
-            }
-            return v;
-        });
-        console.log(jsonImages);*/
     }
 });
 
@@ -223,16 +213,7 @@ $(window).resize(function() {
     $('.product-image-manager').attr('data-image-columns', imageColumns);
 });
 
-/*$(window).unload(function() {
-    var imageManager = $('.product-image-manager');
-    var html = imageManager.outerHTML;
-    var jsonImages = JSON.stringify({html: html});
-    console.log(jsonImages);
-});*/
-
-var droppedFiles = [];
-
-( function ( document, window, index )
+(function (document, window)
 {
     // feature detection for drag&drop upload
     var isAdvancedUpload = function()
@@ -243,16 +224,13 @@ var droppedFiles = [];
 
 
     // applying the effect for every form
-    var forms = document.querySelectorAll( '.box' ); /*
+    var forms = document.querySelectorAll( '.box' );
     Array.prototype.forEach.call( forms, function( form )
     {
-        // letting the server side to know we are going to make an Ajax request
-        /var ajaxFlag = document.createElement( 'input' );
-
-        var input		 = form.querySelector( 'input[type="file"]' ),
+        var input		 = form.querySelector( 'input[id=fileupload]' ),
             label		 = form.querySelector( 'label' ),
-            errorMsg	 = form.querySelector( '.box__error span' ),
             restart		 = form.querySelectorAll( '.box__restart' ),
+            droppedFiles = false,
             showFiles	 = function( files )
             {
                 label.textContent = files.length > 1 ? ( input.getAttribute( 'data-multiple-caption' ) || '' ).replace( '{count}', files.length ) : files[ 0 ].name;
@@ -263,132 +241,58 @@ var droppedFiles = [];
                 event.initEvent( 'submit', true, false );
                 form.dispatchEvent( event );
             };
+
+        // letting the server side to know we are going to make an Ajax request
+        var ajaxFlag = document.createElement( 'input' );
         ajaxFlag.setAttribute( 'type', 'hidden' );
         ajaxFlag.setAttribute( 'name', 'ajax' );
         ajaxFlag.setAttribute( 'value', 1 );
         form.appendChild( ajaxFlag );
 
         // automatically submit the form on file select
-        input.addEventListener( 'change', function( e ) {
-            showFiles( e.target.files );
+        input.addEventListener( 'change', function( e )
+        {
+            showFiles(e.target.files);
             triggerFormSubmit();
         });
 
         // drag&drop files if the feature is available
-        if( isAdvancedUpload ) {
+        if( isAdvancedUpload )
+        {
             form.classList.add( 'has-advanced-upload' ); // letting the CSS part to know drag&drop is supported by the browser
 
-            [ 'drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop' ].forEach( function( event ) {
-                form.addEventListener( event, function(e) {
+            [ 'drag', 'dragstart', 'dragend', 'dragover', 'dragenter', 'dragleave', 'drop' ].forEach( function( event )
+            {
+                form.addEventListener( event, function( e )
+                {
                     // preventing the unwanted behaviours
                     e.preventDefault();
                     e.stopPropagation();
                 });
             });
-            [ 'dragover', 'dragenter' ].forEach( function( event ) {
+            [ 'dragover', 'dragenter' ].forEach( function( event )
+            {
                 form.addEventListener( event, function()
                 {
                     form.classList.add( 'is-dragover' );
                 });
             });
-            [ 'dragleave', 'dragend', 'drop' ].forEach( function( event ) {
+            [ 'dragleave', 'dragend', 'drop' ].forEach( function( event )
+            {
                 form.addEventListener( event, function()
                 {
                     form.classList.remove( 'is-dragover' );
                 });
             });
-            form.addEventListener( 'drop', function( e ) {
-                droppedFiles.push(e.dataTransfer.files); // the files that were dropped
+            form.addEventListener( 'drop', function( e )
+            {
+                droppedFiles = e.dataTransfer.files; // the files that were dropped
+                e.files = e.dataTransfer.files;
                 showFiles( droppedFiles );
-                triggerFormSubmit();
-            });
-            $('#fileupload').on('change', function() {
-                droppedFiles.push($(this)[0].files);
-                showFiles( droppedFiles );
+
                 triggerFormSubmit();
             });
         }
-
-
-        // if the form was submitted
-        form.addEventListener( 'submit', function( e )
-        {
-            // preventing the duplicate submissions if the current one is in progress
-            if( form.classList.contains( 'is-uploading' ) ) return false;
-
-            form.classList.add( 'is-uploading' );
-            form.classList.remove( 'is-error' );
-            if( isAdvancedUpload ) // ajax file upload for modern browsers
-            {
-                e.preventDefault();
-
-                // gathering the form data
-                var ajaxData = new FormData( form );
-                if( droppedFiles )
-                {
-                    Array.prototype.forEach.call( droppedFiles, function( file )
-                    {
-                        ajaxData.append('files', file );
-                    });
-                }
-
-                // ajax request
-                var ajax = new XMLHttpRequest();
-                ajax.open( form.getAttribute( 'method' ), form.getAttribute( 'action' ), true );
-
-                ajax.onload = function()
-                {
-                    form.classList.remove( 'is-uploading' );
-                    if( ajax.status >= 200 && ajax.status < 400 )
-                    {
-                        console.log(ajax.response);
-                        var data = JSON.parse( ajax.response);
-                        console.log(data);
-                        form.classList.add( data.success_ === true ? 'is-success' : 'is-error' );
-                        if( !data.success_ )
-                            errorMsg.textContent = data.error_;
-                        else {
-                            label.textContent = data.text_ === null ? "" : data.text;
-                        }
-
-                        addElement(data.toAdd);
-                    }
-                    else alert( 'Error. Please, contact the webmaster!' );
-                };
-
-                ajax.onerror = function()
-                {
-                    form.classList.remove( 'is-uploading' );
-                    alert( 'Error. Please, try again!' );
-                };
-
-                ajax.send(ajaxData);
-            }
-            else // fallback Ajax solution upload for older browsers
-            {
-                var iframeName	= 'uploadiframe' + new Date().getTime(),
-                    iframe		= document.createElement( 'iframe' );
-
-                $iframe		= $( '<iframe name="' + iframeName + '" style="display: none;"></iframe>' );
-
-                iframe.setAttribute( 'name', iframeName );
-                iframe.style.display = 'none';
-
-                document.body.appendChild( iframe );
-                form.setAttribute( 'target', iframeName );
-
-                iframe.addEventListener( 'load', function()
-                {
-                    var data = JSON.parse( iframe.contentDocument.body.innerHTML );
-                    form.classList.remove( 'is-uploading' );
-                    form.classList.add( data.success === true ? 'is-success' : 'is-error' )
-                    form.removeAttribute( 'target' );
-                    if( !data.success ) errorMsg.textContent = data.error;
-                    iframe.parentNode.removeChild( iframe );
-                });
-            }
-        });
-
 
         // restart the form if has a state of error/success
         Array.prototype.forEach.call( restart, function( entry )
@@ -405,5 +309,5 @@ var droppedFiles = [];
         input.addEventListener( 'focus', function(){ input.classList.add( 'has-focus' ); });
         input.addEventListener( 'blur', function(){ input.classList.remove( 'has-focus' ); });
 
-    });*/
-}( document, window, 0 ));
+    });
+}(document, window));
