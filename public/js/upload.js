@@ -81,7 +81,7 @@
         $navButtons = $('#ocim-form-btn-finish'),
         $imgListWrapper = $('#ocim-image-list-wrapper'),
         $imgList = $('#ocim-image-list'),
-        $imgFormWrapper = $('#ocim-image-form-wrapper'),
+        $imgFormWrapper  = $('#ocim-image-form-wrapper'),
         $imgFormStep2 = $('#ocim-form-step-2'),
         $imgCropFields = $('#ocim-image-crop-fields'),
         $imgFormBtnUpload = input,

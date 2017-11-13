@@ -29,7 +29,7 @@ function addElement(img) {
         "    </div>\n" +
         "    <div class=\"center-container\">\n" +
         "      <img src=" + img.url + " title='" + img.title + "' desc='" + img.description +
-        "' year='" + img.year + "' credits='" + img.credits + "'>\n" +
+        "' year='" + img.year + "' credits='" + img.credits + "'\n" + "id='" + img.id + "'>\n" +
         "    </div>\n" +
         "  </div>\n" +
         "</div>";
@@ -120,12 +120,12 @@ function setListener() {
         var filename = path.replace(/\\/g, '/');
         filename = filename.substring(filename.lastIndexOf('/')+ 1).replace(/[?#].+$/, '');
         var extension = path.split('.').pop();
-        var filesize;
         var dimensions = image.get(0).naturalWidth + ' x ' + image.get(0).naturalHeight;
         var desc = image.attr('desc');
         var title = image.attr('title');
         var year = image.attr('year');
         var credits = image.attr('credits');
+        var id = image.attr('id');
 
         var xhr = new XMLHttpRequest();
         xhr.open("GET", path, true);
@@ -138,7 +138,6 @@ function setListener() {
                 } else {
                     var filesize = Math.round(this.response.byteLength/1000) + ' KB';
                 }
-
                 $('.static-data #filesize').text(filesize);
             }
         };
@@ -146,7 +145,6 @@ function setListener() {
 
         $('#image-preview-modal').html('<img src="'+ path +'">');
         $('.static-data #filename').text(filename);
-        //$('.static-data #file-extension').text('image/' + extension);
         $('.static-data #file-dimensions').text(dimensions);
 
         $('.dynamic-data #url').val(path);
@@ -158,8 +156,27 @@ function setListener() {
 
         $('#file-modal').modal('show');
 
-        $('save-changes').onclick(function () {
+        var clicked = false;
+        $('#save-changes').click(function () {
+            if (!clicked) {
+                clicked = true;
+                var title = $('.dynamic-data #title').val();
+                var desc = $('.dynamic-data #desc').val();
+                var year = $('.dynamic-data #year').val();
+                var credits = $('.dynamic-data #credits').val();
 
+                image.attr('desc', desc);
+                image.attr('title', title);
+                image.attr('year', year);
+                image.attr('credits', credits);
+
+                var xhr1 = new XMLHttpRequest();
+                var params = "id=" + id + "&title=" + title + "&desc=" + desc + "&year=" + year + "&credits=" + credits;
+                xhr1.open("POST", "/info?" + params, true);
+                xhr1.send();
+
+                console.log('send');
+            }
         });
     });
 
@@ -194,7 +211,6 @@ $(window).load(function() {
                 }
             });
 
-            var manager = $('.product-image-manager');
             for (var i = 0; i < images.imgs.length; i++)
                 ids.push(images.imgs[i].id);
             console.log(ids);
@@ -239,7 +255,7 @@ $(window).resize(function() {
             {
                 var event = document.createEvent( 'HTMLEvents' );
                 event.initEvent( 'submit', true, false );
-                form.dispatchEvent( event );
+                showUploadForm();
             };
 
         // letting the server side to know we are going to make an Ajax request
@@ -311,3 +327,8 @@ $(window).resize(function() {
 
     });
 }(document, window));
+
+var showUploadForm = function () {
+    $('.ocim-image-list-wrapper').css('display', 'none');
+    $('#ocim-image-form-wrapper').addClass('ocim-active');
+};
