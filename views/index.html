@@ -54,11 +54,6 @@
                             <li><strong>File size:</strong> <span id="filesize"></span></li>
                             <li><strong>Dimensions:</strong> <span id="file-dimensions"></span></li>
                         </ul>
-                        <ul class="file-info-list">
-                            <li><strong>Uploaded by:</strong> <span id="uploader">Kasper</span></li>
-                            <li><strong>Upload date:</strong> <span id="upload-date">28. august 2016</span></li>
-                            <li><strong>Uploaded to:</strong> <span id="upload-folder">Images12</span></li>
-                        </ul>
                     </div>
                     <div class="col-sm-8 dynamic-data">
                         <form class="form-horizontal">
@@ -71,25 +66,37 @@
                             <div class="form-group">
                                 <label for="title" class="col-sm-2 control-label">Title</label>
                                 <div class="col-sm-10">
-                                    <input type="password" class="form-control" id="title" placeholder="Title">
+                                    <input type="text" class="form-control" id="title" placeholder="Title">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="alt" class="col-sm-2 control-label">Alt Texy</label>
+                                <label for="desc" class="col-sm-2 control-label">Description</label>
                                 <div class="col-sm-10">
-                                    <input type="password" class="form-control" id="alt" placeholder="Alt Text">
+                                    <input type="text" class="form-control" id="desc">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="year" class="col-sm-2 control-label">Year</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="year">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="credits" class="col-sm-2 control-label">Credits</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="credits">
                                 </div>
                             </div>
                         </form>
                         <div class="text-right">
-                            <a href="" target="blank" id="full-image-link">Preview on new tab</a> | <a href="#" class="text-danger" id="delete-image">Delete image permantly</a>
+                            <a href="" target="blank" id="full-image-link">Preview on new tab</a>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-primary" id="save-changes" data-dismiss="modal">Save Changes</button>
             </div>
         </div>
     </div>
