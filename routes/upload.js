@@ -1,5 +1,6 @@
 var Image = require('../models/Image');
 var images = require('./images');
+var async = require('async');
 
 exports.post = function (req, res) {
     console.log(req.files);
@@ -14,8 +15,17 @@ exports.post = function (req, res) {
     } else {
         arr = [req.files.files];
     }
-    for(var i = 0; i < arr.length; i++) {
-        var sampleFile = arr[i];
+
+    var titles = req.body.title.split(',');
+    var descs = req.body.desc.split(',');
+    var years = req.body.year.split(',');
+    var credits = req.body.credits.split(',');
+
+    var json = [];
+    var m = arr.length;
+
+    arr.forEach(function (item, i) {
+        var sampleFile = item;
         var path = '/images/' + sampleFile.name;
         sampleFile.mv('./public' + path, function (err) {
             if (err) {
@@ -23,21 +33,24 @@ exports.post = function (req, res) {
                 return res.status(500).send(err);
             }
 
-            var title = req.body.title[i];
-            var desc = req.body.desc[i];
-            var year = req.body.year[i];
-            var credits = req.body.credits[i];
+            var title = titles[i];
+            var desc = descs[i];
+            var year = years[i];
+            var credit = credits[i];
 
-            var img = new Image(images.id, path, title, desc, credits, year);
+            var img = new Image(images.id, path, title, desc, credit, year);
             images.images.imgs.push(img.toJSON());
             images.id++;
+            json.push(img.toJSON());
 
-            res.json({
-                success_: true,
-                error_: 0,
-                text_: "Done!",
-                toAdd: img.toJSON()
-            });
+            if (--m === 0) {
+                console.log(json);
+                res.json({
+                    success_: true,
+                    error_: 0,
+                    text_: "Done!",
+                    toAdd: json});
+            }
         });
-    }
+    });
 };
