@@ -5,7 +5,7 @@
     <title>Image manager concept</title>
     <script src="https://use.fontawesome.com/2d4e9228e5.js"></script>
 
-    <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
+    <!--<link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>-->
 
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/load-form.css">
@@ -24,7 +24,7 @@
             <div class="col-md-12">
                 <h1>Product image manager</h1>
                 <div class="product-image-manager"></div>
-                <form class="box" method="post" action="/upload" enctype="multipart/form-data">
+                <!--<form class="box" method="post" action="/upload" enctype="multipart/form-data">
                     <div class="box__input">
                         <input class="box__file" type="file" name="files" id="fileupload" data-multiple-caption="{count} files selected" multiple/>
                         <label for="fileupload"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
@@ -33,6 +33,11 @@
                     <div class="box__uploading">Uploading&hellip;</div>
                     <div class="box__success">Done!</div>
                     <div class="box__error">Error! <span></span>.</div>
+                </form>-->
+                <form action="/upload" class="dropzone">
+                    <div class="box__input">
+                        <input name="file" type="file" multiple/>
+                    </div>
                 </form>
             </div>
         </div>
@@ -108,7 +113,6 @@
 <script src='js/lib/jquery-ui.min.js'></script>
 <script src='js/lib/bootstrap.min.js'></script>
 
-<script src="js/upload.js"></script>
 <script src="js/index.js"></script>
 
 </body>

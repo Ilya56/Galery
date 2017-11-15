@@ -22,9 +22,11 @@
     "async": "^2.6.0",
     "body-parser": "latest",
     "cookie-parser": "^1.4.3",
+    "dropzone": "^5.2.0",
     "express": "^4.16.2",
     "express-fileupload": "^0.3.0",
     "jade": "^1.11.0",
+    "lib": "^3.0.1",
     "morgan": "^1.9.0",
     "serve-favicon": "^2.4.5",
     "swig": "^1.4.2"

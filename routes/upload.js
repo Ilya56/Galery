@@ -1,6 +1,5 @@
 var Image = require('../models/Image');
 var images = require('./images');
-var async = require('async');
 
 exports.post = function (req, res) {
     console.log(req.files);
