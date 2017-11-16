@@ -1,3 +1,12 @@
+function Galery(params) {
+    modalId = params.modalId;
+    formId = params.formId;
+    formAction = params.formAction;
+    manager = params.manager;
+
+    init();
+}
+
 function Image(id, url, title, description, credits, year) {
     this.id = id;
     this.url = url;
@@ -54,17 +63,13 @@ function addElement(img) {
     var temp = document.createElement('div');
     temp.innerHTML = elem;
 
-    $('#image-manager')[0].appendChild(temp.firstChild);
+    $(manager)[0].appendChild(temp.firstChild);
 
     setListener();
 }
 
 var prevIndex;
 var ids = [];
-
-$(document).ready(function() {
-    init();
-});
 
 function setListener() {
     $('.on-image-controls > .fa-check').click(function() {
@@ -89,7 +94,7 @@ function setListener() {
         xhr.open("GET", path, true);
         xhr.responseType = "arraybuffer";
         xhr.onreadystatechange = function() {
-            if(this.readyState === this.DONE) {
+            if(this.readyState == this.DONE) {
                 if(this.response.byteLength >= 1000000) {
                     var filesize = this.response.byteLength/1000000;
                     filesize = Math.round(filesize * 10)/10 + ' MB';
@@ -115,7 +120,7 @@ function setListener() {
         $('#file-modal').modal('show');
 
         var clicked = false;
-        $('.save-changes').click(function () {
+        $('#save-changes').click(function () {
             if (!clicked) {
                 clicked = true;
                 var title = $('.dynamic-data #title').val();
@@ -183,14 +188,14 @@ $(window).load(function() {
 });
 
 $(window).resize(function() {
-    var imageColumns = Math.round($('#image-manager').width() / 145);
-    $('#image-manager').attr('data-image-columns', imageColumns);
+    var imageColumns = Math.round($(manager).width() / 145);
+    $(manager).attr('data-image-columns', imageColumns);
 });
 
 function init() {
     $('[data-toggle="tooltip"]').tooltip();
-    var imageColumns = Math.round($('#image-manager').width() / 145);
-    $('#image-manager').attr('data-image-columns', imageColumns);
+    var imageColumns = Math.round($(manager).width() / 145);
+    $(manager).attr('data-image-columns', imageColumns);
     addModalDialog();
     addForm();
     dropzoneInit();
@@ -198,7 +203,7 @@ function init() {
 }
 
 function addForm() {
-    var elem = '<form class="box" id="dz" method="post" action="/upload" enctype="multipart/form-data">' +
+    var elem = '<form class="box" id="' + formId + '" method="post" action="' + formAction + '" enctype="multipart/form-data">' +
         '<strong>Choose a file</strong> or drag it here.' +
         '</form>';
 
@@ -209,8 +214,7 @@ function addForm() {
 }
 
 function makeSortable() {
-
-    $('#image-manager').sortable({
+    $(manager).sortable({
         handle: '.fa-arrows',
         helper: 'clone',
         items: '> .image-container',
@@ -266,7 +270,7 @@ function makeSortable() {
 }
 
 function addModalDialog() {
-    var elem = "<div class=\"modal fade\" id=\"file-modal\" tabindex=\"-1\" role=\"dialog\">\n" +
+    var elem = "<div class=\"modal fade\" id=\"" + modalId + "\" tabindex=\"-1\" role=\"dialog\">\n" +
         "    <div class=\"modal-dialog modal-lg\" role=\"document\">\n" +
         "        <div class=\"modal-content\">\n" +
         "            <div class=\"modal-header\">\n" +
@@ -282,11 +286,6 @@ function addModalDialog() {
         "                            <li><strong>File type:</strong> <span id=\"file-extension\"></span></li>\n" +
         "                            <li><strong>File size:</strong> <span id=\"filesize\"></span></li>\n" +
         "                            <li><strong>Dimensions:</strong> <span id=\"file-dimensions\"></span></li>\n" +
-        "                        </ul>\n" +
-        "                        <ul class=\"file-info-list\">\n" +
-        "                            <li><strong>Uploaded by:</strong> <span id=\"uploader\">Kasper</span></li>\n" +
-        "                            <li><strong>Upload date:</strong> <span id=\"upload-date\">28. august 2016</span></li>\n" +
-        "                            <li><strong>Uploaded to:</strong> <span id=\"upload-folder\">Images12</span></li>\n" +
         "                        </ul>\n" +
         "                    </div>\n" +
         "                    <div class=\"col-sm-8 dynamic-data\">\n" +
@@ -330,7 +329,7 @@ function addModalDialog() {
         "            </div>\n" +
         "            <div class=\"modal-footer\">\n" +
         "                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n" +
-        "                <button type=\"button\" class=\"btn btn-primary\" data-dismiss=\"modal\" id=\"save-changes\">Save Changes</button>\n" +
+        "                <button type=\"button\" class=\"btn btn-primary save-changes\" data-dismiss=\"modal\">Save Changes</button>\n" +
         "            </div>\n" +
         "        </div>\n" +
         "    </div>\n" +
