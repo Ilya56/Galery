@@ -22,84 +22,9 @@
 
 <body>
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1>Product image manager</h1>
-            <div class="product-image-manager"></div>
-            <form class="box" id="dz" method="post" action="/upload" enctype="multipart/form-data">
-                <strong>Choose a file</strong> or drag it here.
-            </form>
-        </div>
-    </div>
+    <h1>Image manager</h1>
+    <div id="image-manager"></div>
 </div>
-<div class="modal fade" id="file-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Details for image</h4>
-            </div>
-            <div class="modal-body">
-                <div id="image-preview-modal"></div>
-                <div class="row image-data-row">
-                    <div class="col-sm-4 static-data">
-                        <ul class="file-info-list">
-                            <li><strong>File name:</strong> <span id="filename"></span></li>
-                            <li><strong>File type:</strong> <span id="file-extension"></span></li>
-                            <li><strong>File size:</strong> <span id="filesize"></span></li>
-                            <li><strong>Dimensions:</strong> <span id="file-dimensions"></span></li>
-                        </ul>
-                        <ul class="file-info-list">
-                            <li><strong>Uploaded by:</strong> <span id="uploader">Kasper</span></li>
-                            <li><strong>Upload date:</strong> <span id="upload-date">28. august 2016</span></li>
-                            <li><strong>Uploaded to:</strong> <span id="upload-folder">Images12</span></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-8 dynamic-data">
-                        <form class="form-horizontal">
-                            <div class="form-group">
-                                <label for="url" class="col-sm-2 control-label">URL</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="url" disabled>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="title" class="col-sm-2 control-label">Title</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="title" placeholder="Title">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="desc" class="col-sm-2 control-label">Description</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="desc">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="year" class="col-sm-2 control-label">Year</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="year">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="credits" class="col-sm-2 control-label">Credits</label>
-                                <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="credits">
-                                </div>
-                            </div>
-                        </form>
-                        <div class="text-right">
-                            <a href="" target="blank" id="full-image-link">Preview on new tab</a> | <a href="#" class="text-danger" id="delete-image">Delete image permantly</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save Changes</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 </body>
 </html>

@@ -17,7 +17,7 @@ Image.prototype.toJSON = function () {
     }
 };
 
-$(function () {
+function dropzoneInit() {
     var mdz = new Dropzone("#dz");
     mdz.on('success', function (file, res) {
         console.log(res);
@@ -32,7 +32,7 @@ $(function () {
             addElement(res.toAdd);
         }
     });
-});
+}
 
 function addElement(img) {
     var elem = "<div class=\"image-container\">\n" +
@@ -54,10 +54,7 @@ function addElement(img) {
     var temp = document.createElement('div');
     temp.innerHTML = elem;
 
-    $('.product-image-manager')[0].appendChild(temp.firstChild);
-
-    var imageColumns = Math.round($('.product-image-manager').width() / 145);
-    $('.product-image-manager').attr('data-image-columns', imageColumns);
+    $('#image-manager')[0].appendChild(temp.firstChild);
 
     setListener();
 }
@@ -66,66 +63,7 @@ var prevIndex;
 var ids = [];
 
 $(document).ready(function() {
-    var manager = $('.product-image-manager');
-
-    $('[data-toggle="tooltip"]').tooltip();
-
-    var imageColumns = Math.round($('.product-image-manager').width() / 145);
-    $('.product-image-manager').attr('data-image-columns', imageColumns);
-
-    manager.sortable({
-        handle: '.fa-arrows',
-        helper: 'clone',
-        items: '> .image-container',
-        placeholder: 'image-container image-placeholder',
-        tolerance: 'pointer',
-        start: function(event, ui) {
-            ui.placeholder.height(ui.item.height());
-            ui.placeholder.html('<div class="inner-placeholder"></div>');
-            prevIndex = ui.item.index();
-        },
-        stop: function (event, ui) {
-            var index = ui.item.index();
-
-            if (index !== prevIndex) {
-                var temp = ids[prevIndex];
-                console.log(ids);
-                if (prevIndex > index) {
-                    for (var i = prevIndex - 1; i >= index; i--)
-                        ids[i + 1] = ids[i];
-                    ids[index] = temp;
-                } else {
-                    for (var i = prevIndex; i < index; i++)
-                        ids[i] = ids[i + 1];
-                    ids[index] = temp;
-                }
-                console.log(ids);
-
-                var ajaxData = new FormData();
-                ajaxData.append('ids', ids);
-
-                // ajax request
-                var ajax = new XMLHttpRequest();
-                ajax.open('post', '/images', true);
-
-                ajax.onload = function () {
-                    if (ajax.status >= 200 && ajax.status < 400) {
-                        var data = JSON.parse(ajax.response);
-                        if (!data.success_) {
-                            alert('Error. Please, contact the webmaster!');
-                        }
-                    }
-                    else alert('Error. Please, contact the webmaster!');
-                };
-
-                ajax.onerror = function () {
-                    alert('Error. Please, try again!');
-                };
-
-                ajax.send(ajaxData);
-            }
-        }
-    });
+    init();
 });
 
 function setListener() {
@@ -245,8 +183,161 @@ $(window).load(function() {
 });
 
 $(window).resize(function() {
-    var imageColumns = Math.round($('.product-image-manager').width() / 145);
-    $('.product-image-manager').attr('data-image-columns', imageColumns);
+    var imageColumns = Math.round($('#image-manager').width() / 145);
+    $('#image-manager').attr('data-image-columns', imageColumns);
 });
 
-var label = document.querySelector('label');
+function init() {
+    $('[data-toggle="tooltip"]').tooltip();
+    var imageColumns = Math.round($('#image-manager').width() / 145);
+    $('#image-manager').attr('data-image-columns', imageColumns);
+    addForm();
+    dropzoneInit();
+    makeSortable();
+    addModalDialog();
+}
+
+function addForm() {
+    var elem = '<form class="box" id="dz" method="post" action="/upload" enctype="multipart/form-data">' +
+        '<strong>Choose a file</strong> or drag it here.' +
+        '</form>';
+
+    var temp = document.createElement('div');
+    temp.innerHTML = elem;
+
+    $('.container')[0].appendChild(temp.firstChild);
+}
+
+function makeSortable() {
+
+    $('#image-manager').sortable({
+        handle: '.fa-arrows',
+        helper: 'clone',
+        items: '> .image-container',
+        placeholder: 'image-container image-placeholder',
+        tolerance: 'pointer',
+        start: function(event, ui) {
+            ui.placeholder.height(ui.item.height());
+            ui.placeholder.html('<div class="inner-placeholder"></div>');
+            prevIndex = ui.item.index();
+        },
+        stop: function (event, ui) {
+            var index = ui.item.index();
+
+            if (index !== prevIndex) {
+                var temp = ids[prevIndex];
+                console.log(ids);
+                if (prevIndex > index) {
+                    for (var i = prevIndex - 1; i >= index; i--)
+                        ids[i + 1] = ids[i];
+                    ids[index] = temp;
+                } else {
+                    for (var i = prevIndex; i < index; i++)
+                        ids[i] = ids[i + 1];
+                    ids[index] = temp;
+                }
+                console.log(ids);
+
+                var ajaxData = new FormData();
+                ajaxData.append('ids', ids);
+
+                // ajax request
+                var ajax = new XMLHttpRequest();
+                ajax.open('post', '/images', true);
+
+                ajax.onload = function () {
+                    if (ajax.status >= 200 && ajax.status < 400) {
+                        var data = JSON.parse(ajax.response);
+                        if (!data.success_) {
+                            alert('Error. Please, contact the webmaster!');
+                        }
+                    }
+                    else alert('Error. Please, contact the webmaster!');
+                };
+
+                ajax.onerror = function () {
+                    alert('Error. Please, try again!');
+                };
+
+                ajax.send(ajaxData);
+            }
+        }
+    });
+}
+
+function addModalDialog() {
+    var elem = "<div class=\"modal fade\" id=\"file-modal\" tabindex=\"-1\" role=\"dialog\">\n" +
+        "    <div class=\"modal-dialog modal-lg\" role=\"document\">\n" +
+        "        <div class=\"modal-content\">\n" +
+        "            <div class=\"modal-header\">\n" +
+        "                <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n" +
+        "                <h4 class=\"modal-title\">Details for image</h4>\n" +
+        "            </div>\n" +
+        "            <div class=\"modal-body\">\n" +
+        "                <div id=\"image-preview-modal\"></div>\n" +
+        "                <div class=\"row image-data-row\">\n" +
+        "                    <div class=\"col-sm-4 static-data\">\n" +
+        "                        <ul class=\"file-info-list\">\n" +
+        "                            <li><strong>File name:</strong> <span id=\"filename\"></span></li>\n" +
+        "                            <li><strong>File type:</strong> <span id=\"file-extension\"></span></li>\n" +
+        "                            <li><strong>File size:</strong> <span id=\"filesize\"></span></li>\n" +
+        "                            <li><strong>Dimensions:</strong> <span id=\"file-dimensions\"></span></li>\n" +
+        "                        </ul>\n" +
+        "                        <ul class=\"file-info-list\">\n" +
+        "                            <li><strong>Uploaded by:</strong> <span id=\"uploader\">Kasper</span></li>\n" +
+        "                            <li><strong>Upload date:</strong> <span id=\"upload-date\">28. august 2016</span></li>\n" +
+        "                            <li><strong>Uploaded to:</strong> <span id=\"upload-folder\">Images12</span></li>\n" +
+        "                        </ul>\n" +
+        "                    </div>\n" +
+        "                    <div class=\"col-sm-8 dynamic-data\">\n" +
+        "                        <form class=\"form-horizontal\">\n" +
+        "                            <div class=\"form-group\">\n" +
+        "                                <label for=\"url\" class=\"col-sm-2 control-label\">URL</label>\n" +
+        "                                <div class=\"col-sm-10\">\n" +
+        "                                    <input type=\"text\" class=\"form-control\" id=\"url\" disabled>\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div class=\"form-group\">\n" +
+        "                                <label for=\"title\" class=\"col-sm-2 control-label\">Title</label>\n" +
+        "                                <div class=\"col-sm-10\">\n" +
+        "                                    <input type=\"text\" class=\"form-control\" id=\"title\" placeholder=\"Title\">\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div class=\"form-group\">\n" +
+        "                                <label for=\"desc\" class=\"col-sm-2 control-label\">Description</label>\n" +
+        "                                <div class=\"col-sm-10\">\n" +
+        "                                    <input type=\"text\" class=\"form-control\" id=\"desc\">\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div class=\"form-group\">\n" +
+        "                                <label for=\"year\" class=\"col-sm-2 control-label\">Year</label>\n" +
+        "                                <div class=\"col-sm-10\">\n" +
+        "                                    <input type=\"text\" class=\"form-control\" id=\"year\">\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                            <div class=\"form-group\">\n" +
+        "                                <label for=\"credits\" class=\"col-sm-2 control-label\">Credits</label>\n" +
+        "                                <div class=\"col-sm-10\">\n" +
+        "                                    <input type=\"text\" class=\"form-control\" id=\"credits\">\n" +
+        "                                </div>\n" +
+        "                            </div>\n" +
+        "                        </form>\n" +
+        "                        <div class=\"text-right\">\n" +
+        "                            <a href=\"\" target=\"blank\" id=\"full-image-link\">Preview on new tab</a>\n" +
+        "                        </div>\n" +
+        "                    </div>\n" +
+        "                </div>\n" +
+        "            </div>\n" +
+        "            <div class=\"modal-footer\">\n" +
+        "                <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>\n" +
+        "                <button type=\"button\" class=\"btn btn-primary\">Save Changes</button>\n" +
+        "            </div>\n" +
+        "        </div>\n" +
+        "    </div>\n" +
+        "</div>";
+
+    var temp = document.createElement('div');
+    temp.innerHTML = elem;
+
+    document.body.appendChild(temp.firstElementChild);
+}
