@@ -25,6 +25,7 @@ $(function () {
         $('.dz-success-mark').remove();
         $('.dz-error-mark').remove();
         $('.label-start').remove();
+        $('.dz-preview').remove();
 
         if (res.success_) {
             ids.push(res.toAdd.id);
@@ -54,6 +55,9 @@ function addElement(img) {
     temp.innerHTML = elem;
 
     $('.product-image-manager')[0].appendChild(temp.firstChild);
+
+    var imageColumns = Math.round($('.product-image-manager').width() / 145);
+    $('.product-image-manager').attr('data-image-columns', imageColumns);
 
     setListener();
 }

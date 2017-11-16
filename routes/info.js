@@ -1,4 +1,3 @@
-var Image = require('../models/Image');
 var images = require('./images').images;
 var urlParse = require('url');
 
