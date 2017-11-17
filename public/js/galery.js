@@ -1,8 +1,17 @@
+var modalId,
+formId,
+formAction,
+manager,
+dataJSON,
+preview;
+
 function Galery(params) {
     modalId = params.modalId;
     formId = params.formId;
     formAction = params.formAction;
     manager = params.manager;
+    dataJSON = params.dataJSON;
+    preview = params.preview;
 
     init();
 }
@@ -94,7 +103,7 @@ function setListener() {
         xhr.open("GET", path, true);
         xhr.responseType = "arraybuffer";
         xhr.onreadystatechange = function() {
-            if(this.readyState == this.DONE) {
+            if(this.readyState === this.DONE) {
                 if(this.response.byteLength >= 1000000) {
                     var filesize = this.response.byteLength/1000000;
                     filesize = Math.round(filesize * 10)/10 + ' MB';
@@ -117,10 +126,8 @@ function setListener() {
         $('.dynamic-data #year').val(year);
         $('.dynamic-data #credits').val(credits);
 
-        $('#file-modal').modal('show');
-
         var clicked = false;
-        $('#save-changes').click(function () {
+        $('.save-changes').click(function () {
             if (!clicked) {
                 clicked = true;
                 var title = $('.dynamic-data #title').val();
@@ -133,14 +140,25 @@ function setListener() {
                 image.attr('year', year);
                 image.attr('credits', credits);
 
-                var xhr1 = new XMLHttpRequest();
+                /*var xhr1 = new XMLHttpRequest();
                 var params = "id=" + id + "&title=" + title + "&desc=" + desc + "&year=" + year + "&credits=" + credits;
                 xhr1.open("POST", "/info?" + params, true);
-                xhr1.send();
+                xhr1.send();*/
 
-                console.log('send');
+                var json = {
+                    id: id,
+                    title: title,
+                    desc: desc,
+                    year: year,
+                    credits: credits
+                };
+
+                sendData(dataJSON, "POST", "info", json);
+                sendData(preview, "POST", "info", json);
             }
         });
+
+        $('#'+modalId).modal('show');
     });
 
     $('.on-image-controls > .fa-times').click(function() {
@@ -185,6 +203,9 @@ $(window).load(function() {
 
         imageGetted = true;
     }
+
+    iframe.style.display = "none";
+    document.body.appendChild(iframe);
 });
 
 $(window).resize(function() {
@@ -242,11 +263,11 @@ function makeSortable() {
                 }
                 console.log(ids);
 
-                var ajaxData = new FormData();
-                ajaxData.append('ids', ids);
+                //var ajaxData = new FormData();
+                //ajaxData.append('ids', ids);
 
                 // ajax request
-                var ajax = new XMLHttpRequest();
+                /*var ajax = new XMLHttpRequest();
                 ajax.open('post', '/images', true);
 
                 ajax.onload = function () {
@@ -263,7 +284,15 @@ function makeSortable() {
                     alert('Error. Please, try again!');
                 };
 
-                ajax.send(ajaxData);
+                ajax.send(ajaxData);*/
+
+                var json = {
+                    ids: ids
+                };
+
+                console.log(json);
+                sendData(dataJSON, "POST", "images", json);
+                sendData(dataJSON, "POST", "images", json);
             }
         }
     });
@@ -339,4 +368,33 @@ function addModalDialog() {
     temp.innerHTML = elem;
 
     document.body.appendChild(temp.firstElementChild);
+}
+
+var iframe = document.createElement("iframe");
+iframe.name = "myTarget";
+
+function sendData(inputId, method, action, data) {
+    var name,
+        form = document.createElement("form"),
+        node = $('#' + inputId)[0];
+
+    console.log(node);
+
+    form.action = "/" + action;
+    form.target = iframe.name;
+    form.method = method;
+    form.id = "templateForm";
+
+    for(name in data) {
+        node.name  = name;
+        node.value = data[name].toString();
+        form.appendChild(node.cloneNode());
+    }
+
+    form.style.display = "none";
+    document.body.appendChild(form);
+
+    form.submit();
+
+    document.body.removeChild(form);
 }

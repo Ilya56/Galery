@@ -12,20 +12,25 @@
     <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js'></script>
     <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
 </head>
 
 <body>
 <div class="container">
     <h1>Image manager</h1>
     <div id="image-manager"></div>
+    <input id="myCoolJSON" type="hidden">
+    <input id="myGalleryPreview" type="hidden">
 </div>
 <script src="js/galery.js"></script>
 <script>
     var galery = new Galery({
-        modalId: 'modal',
+        modalId: 'file-modal',
         formId: 'dz',
         formAction: 'upload',
-        manager: '#image-manager'
+        manager: '#image-manager',
+        dataJSON: 'myCoolJSON',
+        preview: 'myGalleryPreview'
     });
 </script>
 </body>

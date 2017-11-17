@@ -1,8 +1,9 @@
 var images = require('./images').images;
-var urlParse = require('url');
 
 exports.post = function(req, res) {
-    var a = urlParse.parse(req.url, true).query;
+    //var a = urlParse.parse(req.url, true).query;
+    var a = req.body;
+    console.log(req.body);
 
     for(var i = 0; i < images.imgs.length; i++) {
         var j = images.imgs[i];
