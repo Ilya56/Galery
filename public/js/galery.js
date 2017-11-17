@@ -292,7 +292,7 @@ function makeSortable() {
 
                 console.log(json);
                 sendData(dataJSON, "POST", "images", json);
-                sendData(dataJSON, "POST", "images", json);
+                sendData(preview, "POST", "images", json);
             }
         }
     });
