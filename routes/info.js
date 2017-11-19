@@ -2,7 +2,7 @@ var images = require('./images').images;
 
 exports.post = function(req, res) {
     //var a = urlParse.parse(req.url, true).query;
-    var a = req.body;
+    var a = JSON.parse(req.body.data);
     console.log(req.body);
 
     for(var i = 0; i < images.imgs.length; i++) {

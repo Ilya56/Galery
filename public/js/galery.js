@@ -1,14 +1,16 @@
 var modalId,
-formId,
-formAction,
-manager,
-dataJSON,
-preview;
+    formId,
+    uploadAction,
+    manager,
+    dataJSON,
+    preview;
+
+var images;
 
 function Galery(params) {
     modalId = params.modalId;
     formId = params.formId;
-    formAction = params.formAction;
+    uploadAction = params.uploadAction;
     manager = params.manager;
     dataJSON = params.dataJSON;
     preview = params.preview;
@@ -36,7 +38,7 @@ Image.prototype.toJSON = function () {
 };
 
 function dropzoneInit() {
-    var mdz = new Dropzone("#dz");
+    var mdz = new Dropzone('#' + formId);
     mdz.on('success', function (file, res) {
         console.log(res);
 
@@ -48,12 +50,14 @@ function dropzoneInit() {
         if (res.success_) {
             ids.push(res.toAdd.id);
             addElement(res.toAdd);
+            images.push(res.toAdd);
+            sendData(dataJSON, images);
         }
     });
 }
 
-function addElement(img) {
-    var elem = "<div class=\"image-container\">\n" +
+function addElement(img, prim) {
+    var elem = "<div class=\"image-container" + (prim ? ' picked-as-primary' : '') + "\">\n" +
         "<div class=\"inner-image-container\">\n" +
         "  <div class=\"on-image-controls\">\n" +
         "    <div class=\"delete-confirm\">Confirm deleting!</div>\n" +
@@ -84,6 +88,7 @@ function setListener() {
     $('.on-image-controls > .fa-check').click(function() {
         $('.image-container').removeClass('picked-as-primary');
         $(this).parents('.image-container').addClass('picked-as-primary');
+        sendData(preview, $(this).parents('.image-container')[0].children[0].children[1].children[0].src);
     });
 
     $('.on-image-controls > .fa-info-circle').click(function() {
@@ -140,21 +145,17 @@ function setListener() {
                 image.attr('year', year);
                 image.attr('credits', credits);
 
-                /*var xhr1 = new XMLHttpRequest();
-                var params = "id=" + id + "&title=" + title + "&desc=" + desc + "&year=" + year + "&credits=" + credits;
-                xhr1.open("POST", "/info?" + params, true);
-                xhr1.send();*/
+                for(var i = 0; i < images.length; i++) {
+                    var j = images[i];
+                    if (j.id.toString() === id) {
+                        j.title = title;
+                        j.desc = desc;
+                        j.year = year;
+                        j.credits = credits;
+                    }
+                }
 
-                var json = {
-                    id: id,
-                    title: title,
-                    desc: desc,
-                    year: year,
-                    credits: credits
-                };
-
-                sendData(dataJSON, "POST", "info", json);
-                sendData(preview, "POST", "info", json);
+                sendData(dataJSON, images);
             }
         });
 
@@ -165,48 +166,6 @@ function setListener() {
         $(this).parents('.image-container').remove();
     });
 }
-
-var imageGetted = false;
-$(window).load(function() {
-    if (!imageGetted) {
-        var getImgsRequest = new XMLHttpRequest();
-        getImgsRequest.open('GET', "/images", true);
-        getImgsRequest.onload = function () {
-            var images = JSON.parse(getImgsRequest.response);
-            console.log(images.imgs);
-
-            for (var i in images.imgs) {
-                var j = images.imgs[i];
-                addElement(j);
-            }
-
-            $('.image-container').each(function () {
-                var a = $(this).find('img');
-                console.log("--" + a.width() + " " + a.naturalWidth + " " + a.clientWidth + ' ' + a.availWidth);
-                if ($(this).find('img').width() > $(this).find('img').height()) {
-                    $(this).addClass('landscape');
-                } else if ($(this).find('img').width() < $(this).find('img').height()) {
-                    $(this).addClass('portrait');
-                } else {
-                    $(this).addClass('square');
-                }
-            });
-
-            for (var i = 0; i < images.imgs.length; i++)
-                ids.push(images.imgs[i].id);
-            console.log(ids);
-
-            setListener();
-        };
-
-        getImgsRequest.send();
-
-        imageGetted = true;
-    }
-
-    iframe.style.display = "none";
-    document.body.appendChild(iframe);
-});
 
 $(window).resize(function() {
     var imageColumns = Math.round($(manager).width() / 145);
@@ -220,11 +179,12 @@ function init() {
     addModalDialog();
     addForm();
     dropzoneInit();
+    loadImages();
     makeSortable();
 }
 
 function addForm() {
-    var elem = '<form class="box" id="' + formId + '" method="post" action="' + formAction + '" enctype="multipart/form-data">' +
+    var elem = '<form class="box" id="' + formId + '" method="post" action="' + uploadAction + '" enctype="multipart/form-data">' +
         '<strong>Choose a file</strong> or drag it here.' +
         '</form>';
 
@@ -251,7 +211,6 @@ function makeSortable() {
 
             if (index !== prevIndex) {
                 var temp = ids[prevIndex];
-                console.log(ids);
                 if (prevIndex > index) {
                     for (var i = prevIndex - 1; i >= index; i--)
                         ids[i + 1] = ids[i];
@@ -263,36 +222,13 @@ function makeSortable() {
                 }
                 console.log(ids);
 
-                //var ajaxData = new FormData();
-                //ajaxData.append('ids', ids);
+                var newImgs = new Array(images.length);
+                for(var i = 0; i < ids.length; i++)
+                    for(var j = 0; j < images.length; j++)
+                        if (images[j].id === ids[i])
+                            newImgs[i] = images[j];
 
-                // ajax request
-                /*var ajax = new XMLHttpRequest();
-                ajax.open('post', '/images', true);
-
-                ajax.onload = function () {
-                    if (ajax.status >= 200 && ajax.status < 400) {
-                        var data = JSON.parse(ajax.response);
-                        if (!data.success_) {
-                            alert('Error. Please, contact the webmaster!');
-                        }
-                    }
-                    else alert('Error. Please, contact the webmaster!');
-                };
-
-                ajax.onerror = function () {
-                    alert('Error. Please, try again!');
-                };
-
-                ajax.send(ajaxData);*/
-
-                var json = {
-                    ids: ids
-                };
-
-                console.log(json);
-                sendData(dataJSON, "POST", "images", json);
-                sendData(preview, "POST", "images", json);
+                sendData(dataJSON, newImgs);
             }
         }
     });
@@ -370,31 +306,36 @@ function addModalDialog() {
     document.body.appendChild(temp.firstElementChild);
 }
 
-var iframe = document.createElement("iframe");
-iframe.name = "myTarget";
-
-function sendData(inputId, method, action, data) {
-    var name,
-        form = document.createElement("form"),
-        node = $('#' + inputId)[0];
-
+function sendData(inputId, data) {
+    var node = $('#' + inputId)[0];
     console.log(node);
+    node.value = JSON.stringify(data);
+}
 
-    form.action = "/" + action;
-    form.target = iframe.name;
-    form.method = method;
-    form.id = "templateForm";
+function loadImages() {
+    images = JSON.parse($('#' + dataJSON)[0].value).imgs;
+    var prim = JSON.parse($('#' + preview)[0].value).url;
 
-    for(name in data) {
-        node.name  = name;
-        node.value = data[name].toString();
-        form.appendChild(node.cloneNode());
+    for (var i in images) {
+        var t = false;
+        if (images[i].url === prim)
+            t = true;
+        addElement(images[i], t);
     }
 
-    form.style.display = "none";
-    document.body.appendChild(form);
+    $('.image-container').each(function () {
+        var a = $(this).find('img');
+        if ($(this).find('img').width() > $(this).find('img').height()) {
+            $(this).addClass('landscape');
+        } else if ($(this).find('img').width() < $(this).find('img').height()) {
+            $(this).addClass('portrait');
+        } else {
+            $(this).addClass('square');
+        }
+    });
 
-    form.submit();
+    for (var i = 0; i < images.length; i++)
+        ids.push(images[i].id);
 
-    document.body.removeChild(form);
+    setListener();
 }
