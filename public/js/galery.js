@@ -1,3 +1,11 @@
+/*
+  42team contributors: main@42team.org
+  name: Galery
+  description: Gallery for admin integration
+  by: Ilya Dolmatov
+  dolmatoffilya@gmail.com
+*/
+
 var dropzoneId,
     uploadAction,
     manager,
