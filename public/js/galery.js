@@ -4,7 +4,8 @@ var dropzoneId,
     dataJSON,
     preview,
     acceptedFiles,
-    imagesJSON;
+    imagesJSON,
+    modalId;
 
 var images;
 
@@ -18,6 +19,7 @@ function Galery(params) {
         params.acceptedFiles[i] = '.' + params.acceptedFiles[i];
     acceptedFiles = params.acceptedFiles.join(', ');
     imagesJSON = params.imagesJSON;
+    modalId = 'file-modal-' + params.manager;
 
     init();
 }
@@ -42,7 +44,9 @@ Image.prototype.toJSON = function () {
 };
 
 function dropzoneInit() {
-    var mdz = new Dropzone('#' + dropzoneId);
+    var mdz = new Dropzone('#' + dropzoneId, {
+        acceptedFiles: acceptedFiles
+    });
     mdz.on('success', function (file, res) {
         console.log(res);
 
@@ -99,6 +103,7 @@ function setListener() {
     });
 
     $('.on-image-controls > .fa-info-circle').click(function() {
+        console.log('1');
         var image = $(this).parents('.image-container').find('img');
         var path = image.attr('src');
         var filename = path.replace(/\\/g, '/');
@@ -111,6 +116,7 @@ function setListener() {
         var credits = image.attr('credits');
         var id = image.attr('id');
 
+        console.log('2');
         var xhr = new XMLHttpRequest();
         xhr.open("GET", path, true);
         xhr.responseType = "arraybuffer";
@@ -126,6 +132,7 @@ function setListener() {
             }
         };
         xhr.send(null);
+        console.log('3');
 
         $('#image-preview-modal').html('<img src="'+ path +'">');
         $('.static-data #filename').text(filename);
@@ -137,6 +144,7 @@ function setListener() {
         $('.dynamic-data #full-image-link').attr('href', path);
         $('.dynamic-data #year').val(year);
         $('.dynamic-data #credits').val(credits);
+        console.log('4');
 
         var clicked = false;
         $('.save-changes').click(function () {
@@ -165,8 +173,10 @@ function setListener() {
                 sendData(dataJSON, images);
             }
         });
+        console.log('5');
 
-        $('#'+modalId).modal('show');
+        $('#' + modalId).modal('show');
+        console.log('6');
     });
 
     $('.on-image-controls > .fa-times').click(function() {
@@ -250,7 +260,7 @@ function makeSortable() {
 }
 
 function addModalDialog() {
-    var elem = "<div class=\"modal fade\" id=\"file-modal-info\" tabindex=\"-1\" role=\"dialog\">\n" +
+    var elem = "<div class=\"modal fade\" id=\"" + modalId + "\" tabindex=\"-1\" role=\"dialog\">\n" +
         "    <div class=\"modal-dialog modal-lg\" role=\"document\">\n" +
         "        <div class=\"modal-content\">\n" +
         "            <div class=\"modal-header\">\n" +
