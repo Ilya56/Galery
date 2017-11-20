@@ -62,6 +62,13 @@ function dropzoneInit() {
             sendData(dataJSON, images);
         }
     });
+    mdz.on('error', function () {
+        $('.dz-success-mark').remove();
+        $('.dz-error-mark').click(function () {
+            $('.label-start').remove();
+            $('.dz-preview').remove();
+        });
+    });
     $('.dz-hidden-input')[0].accept = acceptedFiles;
 }
 
