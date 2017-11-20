@@ -9,12 +9,14 @@ var dropzoneId,
 var images;
 
 function Galery(params) {
-    dropzoneId = params.dropzoneId;
     uploadAction = params.uploadAction;
-    manager = params.manager;
+    manager = '#' + params.manager;
+    dropzoneId = 'dz-' + params.manager;
     dataJSON = params.dataJSON;
     preview = params.preview;
-    acceptedFiles = params.acceptedFiles;
+    for(var i = 0; i < params.acceptedFiles.length; i++)
+        params.acceptedFiles[i] = '.' + params.acceptedFiles[i];
+    acceptedFiles = params.acceptedFiles.join(', ');
     imagesJSON = params.imagesJSON;
 
     init();
