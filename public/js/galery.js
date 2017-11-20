@@ -2,7 +2,8 @@ var dropzoneId,
     uploadAction,
     manager,
     dataJSON,
-    preview;
+    preview,
+    acceptedFiles;
 
 var images;
 
@@ -12,6 +13,7 @@ function Galery(params) {
     manager = params.manager;
     dataJSON = params.dataJSON;
     preview = params.preview;
+    acceptedFiles = params.acceptedFiles;
 
     init();
 }
@@ -52,6 +54,7 @@ function dropzoneInit() {
             sendData(dataJSON, images);
         }
     });
+    $('.dz-hidden-input')[0].accept = acceptedFiles;
 }
 
 function addElement(img, prim) {
@@ -86,7 +89,9 @@ function setListener() {
     $('.on-image-controls > .fa-check').click(function() {
         $('.image-container').removeClass('picked-as-primary');
         $(this).parents('.image-container').addClass('picked-as-primary');
-        sendData(preview, $(this).parents('.image-container')[0].children[0].children[1].children[0].src);
+        var url = $(this).parents('.image-container')[0].children[0].children[1].children[0].src;
+        console.log(url.substr(url.indexOf('/', 8), url.length));
+        sendData(preview, url.substr(url.indexOf('/', 8), url.length));
     });
 
     $('.on-image-controls > .fa-info-circle').click(function() {
@@ -162,6 +167,14 @@ function setListener() {
 
     $('.on-image-controls > .fa-times').click(function() {
         $(this).parents('.image-container').remove();
+        var url = $(this).parents('.image-container')[0].children[0].children[1].children[0].src;
+        for(var i = 0; i < images.length; i++) {
+            var j = images[i];
+            if (j.url === url) {
+                images.splice(j, 1);
+            }
+        }
+        sendData(dataJSON, images);
     });
 }
 
