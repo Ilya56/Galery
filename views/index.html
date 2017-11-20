@@ -19,7 +19,7 @@
 <div class="container">
     <h1>Image manager</h1>
     <div id="image-manager"></div>
-    <input id="myCoolJSON" type="hidden" value='[{"id":0,"url":"https://images.unsplash.com/photo-1446645681877-acde17e336a9?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=846&q=80&cs=tinysrgb","title":"TITLE","description":"111","credits":"c","year":"2017"},{"id":1,"url":"https://images.unsplash.com/photo-1432139509613-5c4255815697?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=2265&q=80&cs=tinysrgb","title":"TITLE","description":"111","credits":"c","year":"2017"},{"id":2,"url":"https://images.unsplash.com/photo-1432139509613-5c4255815697?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=2265&q=80&cs=tinysrgb","title":"TITLE","description":"111","credits":"c","year":"2017"}]'>
+    <input id="myCoolJSON" type="hidden" value=>
     <input id="myGalleryPreview" type="hidden" value='https://images.unsplash.com/photo-1446645681877-acde17e336a9?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=846&q=80&cs=tinysrgb'>
 </div>
 <script src="js/galery.js"></script>
@@ -30,7 +30,8 @@
         manager: '#image-manager',
         dataJSON: 'myCoolJSON',
         preview: 'myGalleryPreview',
-        acceptedFiles: '.png, .jpeg, .jpg, .gif'
+        acceptedFiles: '.png, .jpeg, .jpg, .gif',
+        imagesJSON: '[{"id":0,"url":"https://images.unsplash.com/photo-1446645681877-acde17e336a9?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=846&q=80&cs=tinysrgb","title":"TITLE","description":"111","credits":"c","year":"2017"},{"id":1,"url":"https://images.unsplash.com/photo-1432139509613-5c4255815697?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=2265&q=80&cs=tinysrgb","title":"TITLE","description":"111","credits":"c","year":"2017"},{"id":2,"url":"https://images.unsplash.com/photo-1432139509613-5c4255815697?dpr=1&auto=format&crop=entropy&fit=crop&w=1500&h=2265&q=80&cs=tinysrgb","title":"TITLE","description":"111","credits":"c","year":"2017"}]'
     });
 </script>
 </body>

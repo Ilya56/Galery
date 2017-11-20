@@ -3,7 +3,8 @@ var dropzoneId,
     manager,
     dataJSON,
     preview,
-    acceptedFiles;
+    acceptedFiles,
+    imagesJSON;
 
 var images;
 
@@ -14,6 +15,7 @@ function Galery(params) {
     dataJSON = params.dataJSON;
     preview = params.preview;
     acceptedFiles = params.acceptedFiles;
+    imagesJSON = params.imagesJSON;
 
     init();
 }
@@ -324,7 +326,8 @@ function sendData(inputId, data) {
 }
 
 function loadImages() {
-    images = JSON.parse($('#' + dataJSON)[0].value);
+    $('#' + dataJSON)[0].value = imagesJSON;
+    images = JSON.parse(imagesJSON);
     var prim = $('#' + preview)[0].value;
 
     for (var i in images) {
