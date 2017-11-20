@@ -34,7 +34,7 @@ exports.post = function (req, res) {
         }
 
         var img = new Image(images.id, path, '', '', '', '');
-        images.images.imgs.push(img.toJSON());
+        images.images.push(img.toJSON());
         images.id++;
 
         res.json({

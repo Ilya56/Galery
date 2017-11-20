@@ -1,5 +1,4 @@
-var modalId,
-    formId,
+var dropzoneId,
     uploadAction,
     manager,
     dataJSON,
@@ -8,8 +7,7 @@ var modalId,
 var images;
 
 function Galery(params) {
-    modalId = params.modalId;
-    formId = params.formId;
+    dropzoneId = params.dropzoneId;
     uploadAction = params.uploadAction;
     manager = params.manager;
     dataJSON = params.dataJSON;
@@ -38,7 +36,7 @@ Image.prototype.toJSON = function () {
 };
 
 function dropzoneInit() {
-    var mdz = new Dropzone('#' + formId);
+    var mdz = new Dropzone('#' + dropzoneId);
     mdz.on('success', function (file, res) {
         console.log(res);
 
@@ -184,9 +182,9 @@ function init() {
 }
 
 function addForm() {
-    var elem = '<form class="box" id="' + formId + '" method="post" action="' + uploadAction + '" enctype="multipart/form-data">' +
+    var elem = '<div class="box" id="' + dropzoneId + '" method="post" action="' + uploadAction + '">' +
         '<strong>Choose a file</strong> or drag it here.' +
-        '</form>';
+        '</div>';
 
     var temp = document.createElement('div');
     temp.innerHTML = elem;
@@ -235,7 +233,7 @@ function makeSortable() {
 }
 
 function addModalDialog() {
-    var elem = "<div class=\"modal fade\" id=\"" + modalId + "\" tabindex=\"-1\" role=\"dialog\">\n" +
+    var elem = "<div class=\"modal fade\" id=\"file-modal-info\" tabindex=\"-1\" role=\"dialog\">\n" +
         "    <div class=\"modal-dialog modal-lg\" role=\"document\">\n" +
         "        <div class=\"modal-content\">\n" +
         "            <div class=\"modal-header\">\n" +
@@ -313,8 +311,8 @@ function sendData(inputId, data) {
 }
 
 function loadImages() {
-    images = JSON.parse($('#' + dataJSON)[0].value).imgs;
-    var prim = JSON.parse($('#' + preview)[0].value).url;
+    images = JSON.parse($('#' + dataJSON)[0].value);
+    var prim = $('#' + preview)[0].value;
 
     for (var i in images) {
         var t = false;
@@ -339,3 +337,18 @@ function loadImages() {
 
     setListener();
 }
+
+/*function sendAll() {
+    var form = document.createElement("form");
+    form.method = "POST";
+    form.action = "/images";
+    form.appendChild(dataJSON.cloneNode());
+    dataJSON.name = "data";
+    form.appendChild(preview.cloneNode());
+    preview.name = "preview";
+    form.submit();
+}
+
+$(window).unload(function () {
+    sendAll();
+});*/
