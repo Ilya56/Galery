@@ -6,30 +6,26 @@
   dolmatoffilya@gmail.com
 */
 
-var dropzoneId,
-    uploadAction,
-    manager,
-    dataJSON,
-    preview,
-    acceptedFiles,
-    imagesJSON,
-    modalId;
-
-var images;
-
 function Galery(params) {
-    uploadAction = params.uploadAction;
-    manager = '#' + params.manager;
-    dropzoneId = 'dz-' + params.manager;
-    dataJSON = params.dataJSON;
-    preview = params.preview;
-    for(var i = 0; i < params.acceptedFiles.length; i++)
-        params.acceptedFiles[i] = '.' + params.acceptedFiles[i];
-    acceptedFiles = params.acceptedFiles.join(', ');
-    imagesJSON = params.imagesJSON;
-    modalId = 'file-modal-' + params.manager;
+    this.uploadAction = params.upload;
+    this.manager = '#' + params.displayId;
+    this.dropzoneId = 'dz-' + params.displayId;
+    var viewType = params.viewType;
+    if (viewType === 'images') {
+        this.dataJSON = params.images.dataListener;
+        this.preview = params.images.previewListener;
+        for (var i = 0; i < params.images.acceptedFiles.length; i++)
+            params.images.acceptedFiles[i] = '.' + params.images.acceptedFiles[i];
+        this.acceptedFiles = params.images.acceptedFiles.join(', ');
+        this.imagesJSON = params.images.data;
+        this.modalId = 'file-modal-' + this.manager;
+    }
 
-    init();
+    this.prevIndex = 0;
+    this.ids = [];
+    this.images = [];
+
+    this.init();
 }
 
 function Image(id, url, title, description, credits, year) {
@@ -51,9 +47,10 @@ Image.prototype.toJSON = function () {
     }
 };
 
-function dropzoneInit() {
-    var mdz = new Dropzone('#' + dropzoneId, {
-        acceptedFiles: acceptedFiles
+Galery.prototype.dropzoneInit = function() {
+    var this_ = this;
+    var mdz = new Dropzone('#' + this.dropzoneId, {
+        acceptedFiles: this_.acceptedFiles
     });
     mdz.on('success', function (file, res) {
         console.log(res);
@@ -64,10 +61,9 @@ function dropzoneInit() {
         $('.dz-preview').remove();
 
         if (res.success_) {
-            ids.push(res.toAdd.id);
-            addElement(res.toAdd);
-            images.push(res.toAdd);
-            sendData(dataJSON, images);
+            this_.addElement(res.toAdd);
+            this_.images.push(res.toAdd);
+            this_.sendData(this_.dataJSON, this_.images);
         }
     });
     mdz.on('error', function () {
@@ -77,10 +73,10 @@ function dropzoneInit() {
             $('.dz-preview').remove();
         });
     });
-    $('.dz-hidden-input')[0].accept = acceptedFiles;
-}
+    //$('.dz-hidden-input')[0].accept = acceptedFiles;
+};
 
-function addElement(img, prim) {
+Galery.prototype.addElement = function(img, prim) {
     var elem = "<div class=\"image-container" + (prim ? ' picked-as-primary' : '') + "\">\n" +
         "<div class=\"inner-image-container\">\n" +
         "  <div class=\"on-image-controls\">\n" +
@@ -100,21 +96,19 @@ function addElement(img, prim) {
     var temp = document.createElement('div');
     temp.innerHTML = elem;
 
-    $(manager)[0].appendChild(temp.firstChild);
+    $(this.manager)[0].appendChild(temp.firstChild);
 
-    setListener();
-}
+    this.setListener();
+};
 
-var prevIndex;
-var ids = [];
-
-function setListener() {
+Galery.prototype.setListener = function () {
+    var this_ = this;
     $('.on-image-controls > .fa-check').click(function() {
         $('.image-container').removeClass('picked-as-primary');
         $(this).parents('.image-container').addClass('picked-as-primary');
         var url = $(this).parents('.image-container')[0].children[0].children[1].children[0].src;
         console.log(url.substr(url.indexOf('/', 8), url.length));
-        sendData(preview, url.substr(url.indexOf('/', 8), url.length));
+        this_.sendData(this_.preview, url.substr(url.indexOf('/', 8), url.length));
     });
 
     $('.on-image-controls > .fa-info-circle').click(function() {
@@ -175,8 +169,8 @@ function setListener() {
                 image.attr('year', year);
                 image.attr('credits', credits);
 
-                for(var i = 0; i < images.length; i++) {
-                    var j = images[i];
+                for(var i = 0; i < this_.images.length; i++) {
+                    var j = this_.images[i];
                     if (j.id.toString() === id) {
                         j.title = title;
                         j.desc = desc;
@@ -185,46 +179,46 @@ function setListener() {
                     }
                 }
 
-                sendData(dataJSON, images);
+                this_.sendData(this_.dataJSON, this_.images);
             }
         });
         console.log('5');
 
-        $('#' + modalId).modal('show');
+        $('#' + this_.modalId).modal('show');
         console.log('6');
     });
 
     $('.on-image-controls > .fa-times').click(function() {
-        $(this).parents('.image-container').remove();
+        $(this_).parents('.image-container').remove();
         var url = $(this).parents('.image-container')[0].children[0].children[1].children[0].src;
-        for(var i = 0; i < images.length; i++) {
-            var j = images[i];
+        for(var i = 0; i < this.images.length; i++) {
+            var j = this.images[i];
             if (j.url === url) {
-                images.splice(j, 1);
+                this_.images.splice(j, 1);
             }
         }
-        sendData(dataJSON, images);
+        this_.sendData(this_.dataJSON, this_.images);
     });
-}
+};
 
 $(window).resize(function() {
-    var imageColumns = Math.round($(manager).width() / 145);
-    $(manager).attr('data-image-columns', imageColumns);
+    var imageColumns = Math.round($(this.manager).width() / 145);
+    $(this.manager).attr('data-image-columns', imageColumns);
 });
 
-function init() {
+Galery.prototype.init = function() {
     $('[data-toggle="tooltip"]').tooltip();
-    var imageColumns = Math.round($(manager).width() / 145);
-    $(manager).attr('data-image-columns', imageColumns);
-    addModalDialog();
-    addForm();
-    dropzoneInit();
-    loadImages();
-    makeSortable();
-}
+    var imageColumns = Math.round($(this.manager).width() / 145);
+    $(this.manager).attr('data-image-columns', imageColumns);
+    this.addModalDialog();
+    this.addForm();
+    this.dropzoneInit();
+    this.loadImages();
+    this.makeSortable();
+};
 
-function addForm() {
-    var elem = '<div class="box" id="' + dropzoneId + '" method="post" action="' + uploadAction + '">' +
+Galery.prototype.addForm = function () {
+    var elem = '<div class="box" id="' + this.dropzoneId + '" method="post" action="' + this.uploadAction + '">' +
         '<strong>Choose a file</strong> or drag it here.' +
         '</div>';
 
@@ -232,10 +226,11 @@ function addForm() {
     temp.innerHTML = elem;
 
     $('.container')[0].appendChild(temp.firstChild);
-}
+};
 
-function makeSortable() {
-    $(manager).sortable({
+Galery.prototype.makeSortable = function() {
+    var this_ = this;
+    $(this.manager).sortable({
         handle: '.fa-arrows',
         helper: 'clone',
         items: '> .image-container',
@@ -244,11 +239,15 @@ function makeSortable() {
         start: function(event, ui) {
             ui.placeholder.height(ui.item.height());
             ui.placeholder.html('<div class="inner-placeholder"></div>');
-            prevIndex = ui.item.index();
+            this.prevIndex = ui.item.index();
         },
         stop: function (event, ui) {
             var index = ui.item.index();
-
+            var ids = this_.ids;
+            console.log(this_.ids);
+            var prevIndex = this.prevIndex;
+            console.log(ids);
+            
             if (index !== prevIndex) {
                 var temp = ids[prevIndex];
                 if (prevIndex > index) {
@@ -262,20 +261,20 @@ function makeSortable() {
                 }
                 console.log(ids);
 
-                var newImgs = new Array(images.length);
+                var newImgs = new Array(this_.images.length);
                 for(var i = 0; i < ids.length; i++)
-                    for(var j = 0; j < images.length; j++)
-                        if (images[j].id === ids[i])
-                            newImgs[i] = images[j];
+                    for(var j = 0; j < this_.images.length; j++)
+                        if (this_.images[j].id === ids[i])
+                            newImgs[i] = this_.images[j];
 
-                sendData(dataJSON, newImgs);
+                this_.sendData(this_.dataJSON, newImgs);
             }
         }
     });
-}
+};
 
-function addModalDialog() {
-    var elem = "<div class=\"modal fade\" id=\"" + modalId + "\" tabindex=\"-1\" role=\"dialog\">\n" +
+Galery.prototype.addModalDialog = function() {
+    var elem = "<div class=\"modal fade\" id=\"" + this.modalId + "\" tabindex=\"-1\" role=\"dialog\">\n" +
         "    <div class=\"modal-dialog modal-lg\" role=\"document\">\n" +
         "        <div class=\"modal-content\">\n" +
         "            <div class=\"modal-header\">\n" +
@@ -344,24 +343,24 @@ function addModalDialog() {
     temp.innerHTML = elem;
 
     document.body.appendChild(temp.firstElementChild);
-}
+};
 
-function sendData(inputId, data) {
+Galery.prototype.sendData = function(inputId, data) {
     var node = $('#' + inputId)[0];
     console.log(node);
     node.value = JSON.stringify(data);
-}
+};
 
-function loadImages() {
-    $('#' + dataJSON)[0].value = imagesJSON;
-    images = JSON.parse(imagesJSON);
-    var prim = $('#' + preview)[0].value;
+Galery.prototype.loadImages = function() {
+    $('#' + this.dataJSON)[0].value = this.imagesJSON;
+    this.images = JSON.parse(this.imagesJSON);
+    var prim = $('#' + this.preview)[0].value;
 
-    for (var i in images) {
+    for (var i in this.images) {
         var t = false;
-        if (images[i].url === prim)
+        if (this.images[i].url === prim)
             t = true;
-        addElement(images[i], t);
+        this.addElement(this.images[i], t);
     }
 
     $('.image-container').each(function () {
@@ -375,16 +374,16 @@ function loadImages() {
         }
     });
 
-    for (var i = 0; i < images.length; i++)
-        ids.push(images[i].id);
+    for (var i = 0; i < this.images.length; i++)
+        this.ids.push(this.images[i].id);
 
-    setListener();
-}
+    this.setListener();
+};
 
 /*function sendAll() {
     var form = document.createElement("form");
     form.method = "POST";
-    form.action = "/images";
+    form.action = "/this.images";
     form.appendChild(dataJSON.cloneNode());
     dataJSON.name = "data";
     form.appendChild(preview.cloneNode());
