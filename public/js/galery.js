@@ -20,6 +20,7 @@ function Galery(params) {
         this.imagesJSON = params.images.data;
         this.modalId = 'file-modal-' + this.manager;
     }
+    if (viewType === 'image')
 
     this.prevIndex = 0;
     this.ids = [];
